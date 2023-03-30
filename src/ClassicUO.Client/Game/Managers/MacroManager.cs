@@ -1791,7 +1791,18 @@ namespace ClassicUO.Game.Managers
 
                 case MacroType.ToggleTreeStumps:
                     StaticFilters.CleanTreeTextures();
-                    ProfileManager.CurrentProfile.TreeToStumps = !ProfileManager.CurrentProfile.TreeToStumps;
+                    // ## BEGIN - END ## // ART / HUE CHANGES
+                    //ProfileManager.CurrentProfile.TreeToStumps = !ProfileManager.CurrentProfile.TreeToStumps;
+                    // ## BEGIN - END ## // ART / HUE CHANGES
+                    if (ProfileManager.CurrentProfile.TreeType == 0)
+                    {
+                        ProfileManager.CurrentProfile.TreeType = ProfileManager.CurrentProfile.TreeType = 2;
+                    }
+                    else
+                    {
+                        ProfileManager.CurrentProfile.TreeType = ProfileManager.CurrentProfile.TreeType = 0;
+                    }
+                    // ## BEGIN - END ## // ART / HUE CHANGES
 
                     break;
 
@@ -2346,13 +2357,54 @@ namespace ClassicUO.Game.Managers
         UsePotion,
         CloseAllHealthBars,
         RazorMacro,
+        // ## BEGIN - END ## // BASICSETUP
+        notimplemented,
+        notimplemented1,
+        notimplemented2,
+        notimplemented3,
+        notimplemented4,
+        notimplemented5,
+        notimplemented6,
+        notimplemented7,
+        notimplemented8,
+        notimplemented9,
+        notimplemented10,
+        notimplemented11,
+        notimplemented12,
+        notimplemented13,
+        notimplemented14,
+        notimplemented15,
+        notimplemented16,
+        notimplemented17,
+        notimplemented18,
+        notimplemented19,
+        notimplemented20,
+        notimplemented21,
+        notimplemented22,
+        // ## BEGIN - END ## // BASICSETUP
         ToggleDrawRoofs,
         ToggleTreeStumps,
         ToggleVegetation,
         ToggleCaveTiles,
+        // ## BEGIN - END ## // BASICSETUP
+        notimplemented23,
+        notimplemented24,
+        notimplemented25,
+        notimplemented26,
+        notimplemented27,
+        notimplemented28,
+        notimplemented29,
+        notimplemented30,
+        // ## BEGIN - END ## // BASICSETUP
         CloseInactiveHealthBars,
         CloseCorpses,
         UseObject,
+        // ## BEGIN - END ## // BASICSETUP
+        notimplemented31,
+        notimplemented32,
+        notimplemented33,
+        notimplemented34,
+        // ## BEGIN - END ## // BASICSETUP
         LookAtMouse
     }
 

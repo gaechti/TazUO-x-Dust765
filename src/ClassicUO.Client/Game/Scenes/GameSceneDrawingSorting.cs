@@ -35,6 +35,9 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
+// ## BEGIN - END ## // ART / HUE CHANGES
+using ClassicUO.TazUO.TazUO;
+// ## BEGIN - END ## // ART / HUE CHANGES
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.Map;
@@ -695,6 +698,14 @@ namespace ClassicUO.Game.Scenes
                 {
                     ref var itemData = ref staticc.ItemData;
 
+                    // ## BEGIN - END ## // ART / HUE CHANGES
+                    if (obj is Static st)
+                    {
+                        st = CombatCollection.GSDSFilters(st);
+                    }
+                    // ## BEGIN - END ## // ART / HUE CHANGES
+
+
                     if (itemData.IsInternal)
                     {
                         continue;
@@ -711,7 +722,11 @@ namespace ClassicUO.Game.Scenes
                     }
 
                     //we avoid to hide impassable foliage or bushes, if present...
-                    if (itemData.IsFoliage && ProfileManager.CurrentProfile.TreeToStumps)
+                    // ## BEGIN - END ## // ART / HUE CHANGES
+                    //if (itemData.IsFoliage && ProfileManager.CurrentProfile.TreeToStumps)
+                    // ## BEGIN - END ## // ART / HUE CHANGES
+                    if (itemData.IsFoliage && ProfileManager.CurrentProfile.TreeType != 0)
+                    // ## BEGIN - END ## // ART / HUE CHANGES
                     {
                         continue;
                     }
@@ -768,7 +783,11 @@ namespace ClassicUO.Game.Scenes
 
                     if (!itemData.IsMultiMovable)
                     {
-                        if (itemData.IsFoliage && ProfileManager.CurrentProfile.TreeToStumps)
+                        // ## BEGIN - END ## // ART / HUE CHANGES
+                        //if (itemData.IsFoliage && ProfileManager.CurrentProfile.TreeToStumps)
+                        // ## BEGIN - END ## // ART / HUE CHANGES
+                        if (itemData.IsFoliage && ProfileManager.CurrentProfile.TreeType != 0)
+                        // ## BEGIN - END ## // ART / HUE CHANGES
                         {
                             continue;
                         }
@@ -859,7 +878,11 @@ namespace ClassicUO.Game.Scenes
                         continue;
                     }
 
-                    if (!itemData.IsMultiMovable && itemData.IsFoliage && ProfileManager.CurrentProfile.TreeToStumps)
+                    // ## BEGIN - END ## // ART / HUE CHANGES
+                    //if (!itemData.IsMultiMovable && itemData.IsFoliage && ProfileManager.CurrentProfile.TreeToStumps)
+                    // ## BEGIN - END ## // ART / HUE CHANGES
+                    if (!itemData.IsMultiMovable && itemData.IsFoliage && ProfileManager.CurrentProfile.TreeType != 0)
+                    // ## BEGIN - END ## // ART / HUE CHANGES
                     {
                         continue;
                     }

@@ -188,6 +188,17 @@ namespace ClassicUO.Game.UI.Gumps
         #endregion
 
 
+        // ## BEGIN - END ## // BASICSETUP
+
+        // ## BEGIN - END ## // ART / HUE CHANGES
+        private Checkbox _colorStealth, _colorEnergyBolt, _colorGold, _colorTreeTile, _colorBlockerTile;
+        private ClickableColorBox _stealthColorPickerBox, _energyBoltColorPickerBox, _goldColorPickerBox, _treeTileColorPickerBox, _blockerTileColorPickerBox;
+        private Combobox _goldType, _treeType, _blockerType, _stealthNeonType, _energyBoltNeonType, _energyBoltArtType;
+        // ## BEGIN - END ## // ART / HUE CHANGES
+
+        // ## BEGIN - END ## // BASICSETUP
+
+
         private Profile _currentProfile = ProfileManager.CurrentProfile;
 
         public OptionsGump() : base(0, 0)
@@ -391,6 +402,12 @@ namespace ClassicUO.Game.UI.Gumps
                 }
             );
 
+            // ## BEGIN - END ## // BASICSETUP
+            Add(new NiceButton(10, 10 + 30 * i++, 140, 25, ButtonAction.SwitchPage, "Taz") { ButtonParameter = 16 });
+            Add(new NiceButton(10, 10 + 30 * i++, 140, 25, ButtonAction.SwitchPage, "Configs") { ButtonParameter = 17 });
+            Add(new NiceButton(10, 10 + 30 * i++, 140, 25, ButtonAction.SwitchPage, "Mods") { ButtonParameter = 18 });
+            // ## BEGIN - END ## // BASICSETUP
+
             Add
             (
                 new NiceButton
@@ -491,6 +508,11 @@ namespace ClassicUO.Game.UI.Gumps
             BuildContainers();
             BuildExperimental();
             BuildCooldowns();
+            // ## BEGIN - END ## // BASICSETUP
+            BuildDust();
+            Build765();
+            BuildMods();
+            // ## BEGIN - END ## // BASICSETUP
 
             ChangePage(1);
         }
@@ -1484,7 +1506,8 @@ namespace ClassicUO.Game.UI.Gumps
                     startY
                 )
             );
-
+            // ## BEGIN - END ## // ART / HUE CHANGES
+            /*
             section5.Add
             (
                 _treeToStumps = AddCheckBox
@@ -1496,6 +1519,8 @@ namespace ClassicUO.Game.UI.Gumps
                     startY
                 )
             );
+            */
+            // ## BEGIN - END ## // ART / HUE CHANGES
 
             section5.Add
             (
@@ -1717,6 +1742,8 @@ namespace ClassicUO.Game.UI.Gumps
             DataBox box = new DataBox(startX, startY, rightArea.Width - 15, 1);
             box.WantUpdateSize = true;
             rightArea.Add(box);
+
+
 
             SettingsSection section = AddSettingsSection(box, "Game window");
 
@@ -3775,6 +3802,131 @@ namespace ClassicUO.Game.UI.Gumps
             Add(rightArea, PAGE);
         }
 
+        // ## BEGIN - END ## // BASICSETUP
+        private void BuildDust()
+        {
+            const int PAGE = 16;
+            ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 420, true);
+
+            int startX = 5;
+            int startY = 5;
+
+            DataBox box = new DataBox(startX, startY, rightArea.Width - 15, 1);
+            box.WantUpdateSize = true;
+            rightArea.Add(box);
+
+            // ## BEGIN - END ## // ART / HUE CHANGES
+            SettingsSection section = AddSettingsSection(box, "-----ART / HUE CHANGES-----");
+
+            section.Add(_colorStealth = AddCheckBox(null, "Color stealth ON / OFF", _currentProfile.ColorStealth, startX, startY));
+            startY += _colorStealth.Height + 2;
+
+            section.Add(_stealthColorPickerBox = AddColorBox(null, startX, startY, _currentProfile.StealthHue, ""));
+            startY += _stealthColorPickerBox.Height + 2;
+
+            section.AddRight(AddLabel(null, "Stealth color", 0, 0), 2);
+
+            section.Add(AddLabel(null, "or neon:", startX, startY));
+
+            int mode = _currentProfile.StealthNeonType;
+            section.AddRight(_stealthNeonType = AddCombobox(null, new[] { "Off", "White", "Pink", "Ice", "Fire" }, mode, startX, startY, 100));
+            startY += _stealthNeonType.Height + 2;
+
+            section.Add(_colorEnergyBolt = AddCheckBox(null, "Color energy bolt ON / OFF", _currentProfile.ColorEnergyBolt, startX, startY));
+            startY += _colorEnergyBolt.Height + 2;
+
+            section.Add(_energyBoltColorPickerBox = AddColorBox(null, startX, startY, _currentProfile.EnergyBoltHue, ""));
+            startY += _energyBoltColorPickerBox.Height + 2;
+
+            section.AddRight(AddLabel(null, "Energy bolt color", 0, 0), 2);
+
+            section.Add(AddLabel(null, "or neon: ", startX, startY));
+
+            mode = _currentProfile.EnergyBoltNeonType;
+            section.AddRight(_energyBoltNeonType = AddCombobox(null, new[] { "Off", "White", "Pink", "Ice", "Fire" }, mode, startX, startY, 100));
+            startY += _energyBoltNeonType.Height + 2;
+
+            section.Add(AddLabel(null, "Change energy bolt art to:", startX, startY));
+
+            mode = _currentProfile.EnergyBoltArtType;
+            section.AddRight(_energyBoltArtType = AddCombobox(null, new[] { "Normal", "Explo", "Bagball" }, mode, startX, startY, 100));
+            startY += _energyBoltArtType.Height + 2;
+
+            section.Add(AddLabel(null, "Change gold art to:", startX, startY));
+
+            mode = _currentProfile.GoldType;
+            section.AddRight(_goldType = AddCombobox(null, new[] { "Normal", "Cannonball", "Prev Coin" }, mode, startX, startY, 100));
+            startY += _goldType.Height + 2;
+
+            section.Add(_colorGold = AddCheckBox(null, "Color cannonball or prev coin ON / OFF", _currentProfile.ColorGold, startX, startY));
+            startY += _colorGold.Height + 2;
+
+            section.Add(_goldColorPickerBox = AddColorBox(null, startX, startY, _currentProfile.GoldHue, ""));
+            startY += _goldColorPickerBox.Height + 2;
+
+            section.AddRight(AddLabel(null, "Cannonball or prev coin color", 0, 0), 2);
+
+            section.Add(AddLabel(null, "Change tree art to:", startX, startY));
+
+            mode = _currentProfile.TreeType;
+            section.AddRight(_treeType = AddCombobox(null, new[] { "Normal", "Stump", "Tile" }, mode, startX, startY, 100));
+            startY += _treeType.Height + 2;
+
+            section.Add(_colorTreeTile = AddCheckBox(null, "Color stump or tile ON / OFF", _currentProfile.ColorTreeTile, startX, startY));
+            startY += _colorTreeTile.Height + 2;
+
+            section.Add(_treeTileColorPickerBox = AddColorBox(null, startX, startY, _currentProfile.TreeTileHue, ""));
+            startY += _treeTileColorPickerBox.Height + 2;
+
+            section.AddRight(AddLabel(null, "Stump or tile color", 0, 0), 2);
+
+            section.Add(AddLabel(null, "Blocker Type:", startX, startY));
+
+            mode = _currentProfile.BlockerType;
+            section.AddRight(_blockerType = AddCombobox(null, new[] { "Normal", "Stump", "Tile" }, mode, startX, startY, 100));
+            startY += _blockerType.Height + 2;
+
+            section.Add(_colorBlockerTile = AddCheckBox(null, "Color stump or tile", _currentProfile.ColorBlockerTile, startX, startY));
+            startY += _colorBlockerTile.Height + 2;
+
+            section.Add(_blockerTileColorPickerBox = AddColorBox(null, startX, startY, _currentProfile.BlockerTileHue, ""));
+            startY += _blockerTileColorPickerBox.Height + 2;
+
+            section.AddRight(AddLabel(null, "Stump or tile color", 0, 0), 2);
+            // ## BEGIN - END ## // ART / HUE CHANGES
+
+            Add(rightArea, PAGE);
+        }
+        private void Build765()
+        {
+            const int PAGE = 17;
+            ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 420, true);
+
+            int startX = 5;
+            int startY = 5;
+
+            DataBox box = new DataBox(startX, startY, rightArea.Width - 15, 1);
+            box.WantUpdateSize = true;
+            rightArea.Add(box);
+
+            Add(rightArea, PAGE);
+        }
+        private void BuildMods()
+        {
+            const int PAGE = 18;
+            ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 420, true);
+
+            int startX = 5;
+            int startY = 5;
+
+            DataBox box = new DataBox(startX, startY, rightArea.Width - 15, 1);
+            box.WantUpdateSize = true;
+            rightArea.Add(box);
+
+            Add(rightArea, PAGE);
+        }
+        // ## BEGIN - END ## // BASICSETUP
+
         private void BuildCooldowns()
         {
             const int PAGE = 8787;
@@ -3999,7 +4151,9 @@ namespace ClassicUO.Game.UI.Gumps
                     _invulnerableColorPickerBox.Hue = 0x0030;
                     _drawRoofs.IsChecked = false;
                     _enableCaveBorder.IsChecked = false;
-                    _treeToStumps.IsChecked = false;
+                    // ## BEGIN - END ## // ART / HUE CHANGES
+                    //_treeToStumps.IsChecked = false;
+                    // ## BEGIN - END ## // ART / HUE CHANGES
                     _hideVegetation.IsChecked = false;
                     _noColorOutOfRangeObjects.IsChecked = false;
                     _circleOfTranspRadius.Value = Constants.MIN_CIRCLE_OF_TRANSPARENCY_RADIUS;
@@ -4330,11 +4484,15 @@ namespace ClassicUO.Game.UI.Gumps
                 _currentProfile.EnableCaveBorder = _enableCaveBorder.IsChecked;
             }
 
+            // ## BEGIN - END ## // ART / HUE CHANGES
+            /*
             if (_currentProfile.TreeToStumps != _treeToStumps.IsChecked)
             {
                 StaticFilters.CleanTreeTextures();
                 _currentProfile.TreeToStumps = _treeToStumps.IsChecked;
             }
+            */
+            // ## BEGIN - END ## // ART / HUE CHANGES
 
             _currentProfile.FieldsType = _fieldsType.SelectedIndex;
             _currentProfile.HideVegetation = _hideVegetation.IsChecked;
@@ -4838,6 +4996,35 @@ namespace ClassicUO.Game.UI.Gumps
             _currentProfile.TooltipBackgroundOpacity = _tooltip_background_opacity.Value;
             _currentProfile.TooltipDisplayZoom = _tooltip_zoom.Value;
             _currentProfile.TooltipFont = _tooltip_font_selector.GetSelectedFont();
+
+            // ## BEGIN - END ## // BASICSETUP
+
+            // ## BEGIN - END ## // ART / HUE CHANGES
+            _currentProfile.ColorStealth = _colorStealth.IsChecked;
+            _currentProfile.StealthHue = _stealthColorPickerBox.Hue;
+            _currentProfile.GoldType = _goldType.SelectedIndex;
+            _currentProfile.GoldHue = _goldColorPickerBox.Hue;
+            _currentProfile.ColorGold = _colorGold.IsChecked;
+            _currentProfile.ColorEnergyBolt = _colorEnergyBolt.IsChecked;
+            _currentProfile.EnergyBoltHue = _energyBoltColorPickerBox.Hue;
+            _currentProfile.ColorTreeTile = _colorTreeTile.IsChecked;
+            _currentProfile.TreeTileHue = _treeTileColorPickerBox.Hue;
+            _currentProfile.ColorBlockerTile = _colorBlockerTile.IsChecked;
+            _currentProfile.BlockerTileHue = _blockerTileColorPickerBox.Hue;
+            _currentProfile.BlockerType = _blockerType.SelectedIndex;
+            _currentProfile.StealthNeonType = _stealthNeonType.SelectedIndex;
+            _currentProfile.EnergyBoltNeonType = _energyBoltNeonType.SelectedIndex;
+            _currentProfile.EnergyBoltArtType = _energyBoltArtType.SelectedIndex;
+            if (_currentProfile.TreeType != _treeType.SelectedIndex)
+            {
+                if (_treeType.SelectedIndex == 0)
+                {
+                    StaticFilters.CleanTreeTextures();
+                }
+                _currentProfile.TreeType = _treeType.SelectedIndex;
+            }
+            // ## BEGIN - END ## // ART / HUE CHANGES
+            // ## BEGIN - END ## // BASICSETUP
 
             _currentProfile?.Save(ProfileManager.ProfilePath);
         }
