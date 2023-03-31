@@ -35,6 +35,9 @@ using System.IO;
 using System.Xml;
 using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
+// ## BEGIN - END ## // MULTIJOURNAL
+using System.Linq;
+// ## BEGIN - END ## // MULTIJOURNAL
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.UI.Controls;
 using ClassicUO.Input;
@@ -55,8 +58,16 @@ namespace ClassicUO.Game.UI.Gumps
         private bool _isMinimized;
         private readonly RenderedTextList _journalEntries;
         private readonly ScrollFlag _scrollBar;
+        // ## BEGIN - END ## // MULTIJOURNAL
+        private Label _titleLabel;
+        private static MessageType[] types = Enum.GetValues(typeof(MessageType)) as MessageType[];
+        // ## BEGIN - END ## // MULTIJOURNAL
 
-        public JournalGump() : base(0, 0)
+        // ## BEGIN - END ## // MULTIJOURNAL
+        //public JournalGump() : base(0, 0)
+        // ## BEGIN - END ## // MULTIJOURNAL
+        public JournalGump(uint serial = 0, string title = null, ushort hue = 0, bool[] filter = null) : base(0, 0)
+        // ## BEGIN - END ## // MULTIJOURNAL
         {
             Height = 300;
             CanMove = true;
@@ -66,18 +77,21 @@ namespace ClassicUO.Game.UI.Gumps
             Add
             (
                 _background = new ExpandableScroll(0, _diffY, Height - _diffY, 0x1F40)
-                {
-                    TitleGumpID = 0x82A
-                }
+            // ## BEGIN - END ## // MULTIJOURNAL
+            /*
+            {
+                TitleGumpID = 0x82A
+            }
+            */
+            // ## BEGIN - END ## // MULTIJOURNAL
             );
 
+            // ## BEGIN - END ## // MULTIJOURNAL
+            /*
             const ushort DARK_MODE_JOURNAL_HUE = 903;
-
             string str = ResGumps.DarkMode;
             int width = FontsLoader.Instance.GetWidthASCII(6, str);
-
             Checkbox darkMode;
-
             Add
             (
                 darkMode = new Checkbox
@@ -95,14 +109,26 @@ namespace ClassicUO.Game.UI.Gumps
                     IsChecked = ProfileManager.CurrentProfile.JournalDarkMode
                 }
             );
-
             Hue = (ushort) (ProfileManager.CurrentProfile.JournalDarkMode ? DARK_MODE_JOURNAL_HUE : 0);
-
             darkMode.ValueChanged += (sender, e) =>
             {
                 bool ok = ProfileManager.CurrentProfile.JournalDarkMode = !ProfileManager.CurrentProfile.JournalDarkMode;
                 Hue = (ushort) (ok ? DARK_MODE_JOURNAL_HUE : 0);
             };
+            */
+            // ## BEGIN - END ## // MULTIJOURNAL
+            Hue = hue;
+
+            if (!string.IsNullOrEmpty(title))
+            {
+                LocalSerial = serial;
+                Add(_titleLabel = new Label(title, true, 0) { X = 160 - title.Length * 2, Y = 33 });
+            }
+            else
+            {
+                _background.TitleGumpID = 0x82A;
+            }
+            // ## BEGIN - END ## // MULTIJOURNAL
 
             _scrollBar = new ScrollFlag(-25, _diffY + 36, Height - _diffY, true);
 
@@ -120,14 +146,14 @@ namespace ClassicUO.Game.UI.Gumps
 
             Add(_scrollBar);
 
+            // ## BEGIN - END ## // MULTIJOURNAL
+            /*
             Add(_hitBox = new HitBox(160, 0, 23, 24));
             _hitBox.MouseUp += _hitBox_MouseUp;
             _gumpPic.MouseDoubleClick += _gumpPic_MouseDoubleClick;
-
             int cx = 43;   // 63
             int dist = 75; // 85
             byte font = 6; // 1
-
             _filters_chekboxes[0] = new Checkbox
             (
                 0x00D2,
@@ -142,7 +168,6 @@ namespace ClassicUO.Game.UI.Gumps
                 LocalSerial = 1,
                 IsChecked = ProfileManager.CurrentProfile.ShowJournalSystem
             };
-
             _filters_chekboxes[1] = new Checkbox
             (
                 0x00D2,
@@ -157,7 +182,6 @@ namespace ClassicUO.Game.UI.Gumps
                 LocalSerial = 2,
                 IsChecked = ProfileManager.CurrentProfile.ShowJournalObjects
             };
-
             _filters_chekboxes[2] = new Checkbox
             (
                 0x00D2,
@@ -172,7 +196,6 @@ namespace ClassicUO.Game.UI.Gumps
                 LocalSerial = 0,
                 IsChecked = ProfileManager.CurrentProfile.ShowJournalClient
             };
-
             _filters_chekboxes[3] = new Checkbox
             (
                 0x00D2,
@@ -187,48 +210,85 @@ namespace ClassicUO.Game.UI.Gumps
                 LocalSerial = 3,
                 IsChecked = ProfileManager.CurrentProfile.ShowJournalGuildAlly
             };
-
             void on_check_box(object sender, EventArgs e)
             {
                 Checkbox c = (Checkbox) sender;
-
                 if (c != null)
                 {
                     switch ((TextType) c.LocalSerial)
                     {
                         case TextType.CLIENT:
                             ProfileManager.CurrentProfile.ShowJournalClient = c.IsChecked;
-
                             break;
-
                         case TextType.SYSTEM:
                             ProfileManager.CurrentProfile.ShowJournalSystem = c.IsChecked;
-
                             break;
-
                         case TextType.OBJECT:
                             ProfileManager.CurrentProfile.ShowJournalObjects = c.IsChecked;
-
                             break;
-
                         case TextType.GUILD_ALLY:
                             ProfileManager.CurrentProfile.ShowJournalGuildAlly = c.IsChecked;
-
                             break;
                     }
                 }
             }
-
             for (int i = 0; i < _filters_chekboxes.Length; i++)
             {
                 _filters_chekboxes[i].ValueChanged += on_check_box;
-
                 Add(_filters_chekboxes[i]);
             }
+            */
+            // ## BEGIN - END ## // MULTIJOURNAL
+            if (filter == null)
+            {
+                Filter = Enumerable.Repeat(true, types.Length).ToArray();
+            }
+            else
+            {
+                Filter = filter;
+            }
+
+            Add(_hitBox = new HitBox(160, 0, 23, 24));
+            _hitBox.MouseUp += _hitBox_MouseUp;
+            _gumpPic.MouseDoubleClick += _gumpPic_MouseDoubleClick;
+            // ## BEGIN - END ## // MULTIJOURNAL
 
             InitializeJournalEntries();
             World.Journal.EntryAdded += AddJournalEntry;
         }
+        // ## BEGIN - END ## // MULTIJOURNAL
+        public string Title
+        {
+            get => _titleLabel != null ? _titleLabel.Text : string.Empty;
+            set
+            {
+                if (value != string.Empty)
+                {
+                    _background.TitleGumpID = 0;
+                    if (_titleLabel != null)
+                    {
+                        _titleLabel.Text = value;
+                        _titleLabel.X = 160 - value.Length * 2;
+                    }
+                    else
+                    {
+                        Add(_titleLabel = new Label(value, true, 0) { X = 160 - value.Length * 2, Y = 33 });
+                    }
+                }
+                else
+                {
+                    _background.TitleGumpID = 0x82A;
+                    if (_titleLabel != null)
+                    {
+                        Remove(_titleLabel);
+                        _titleLabel = null;
+                    }
+                }
+            }
+        }
+
+        public bool[] Filter { get => _journalEntries._filter; set => _journalEntries._filter = value; }
+        // ## BEGIN - END ## // MULTIJOURNAL
 
         public override GumpType GumpType => GumpType.Journal;
 
@@ -247,7 +307,7 @@ namespace ClassicUO.Game.UI.Gumps
                 {
                     _isMinimized = value;
 
-                    _gumpPic.Graphic = value ? (ushort) 0x830 : (ushort) 0x82D;
+                    _gumpPic.Graphic = value ? (ushort)0x830 : (ushort)0x82D;
 
                     if (value)
                     {
@@ -288,10 +348,14 @@ namespace ClassicUO.Game.UI.Gumps
             WantUpdateSize = true;
             _journalEntries.Height = Height - (98 + _diffY);
 
+            // ## BEGIN - END ## // MULTIJOURNAL
+            /*
             for (int i = 0; i < _filters_chekboxes.Length; i++)
             {
                 _filters_chekboxes[i].Y = _background.Height - _filters_chekboxes[i].Height - _diffY + 10;
             }
+            */
+            // ## BEGIN - END ## // MULTIJOURNAL
         }
 
         private void AddJournalEntry(object sender, JournalEntry entry)
@@ -311,7 +375,7 @@ namespace ClassicUO.Game.UI.Gumps
                 entry.Hue,
                 entry.IsUnicode,
                 entry.Time,
-                entry.TextType
+                entry.MessageType
             );
         }
 
@@ -362,7 +426,12 @@ namespace ClassicUO.Game.UI.Gumps
         {
             private readonly Deque<RenderedText> _entries, _hours;
             private readonly ScrollBarBase _scrollBar;
-            private readonly Deque<TextType> _text_types;
+            // ## BEGIN - END ## // MULTIJOURNAL
+            //private readonly Deque<TextType> _text_types;
+            // ## BEGIN - END ## // MULTIJOURNAL
+            private readonly Deque<MessageType> _text_types;
+            internal bool[] _filter;
+            // ## BEGIN - END ## // MULTIJOURNAL
 
             public RenderedTextList(int x, int y, int width, int height, ScrollBarBase scrollBarControl)
             {
@@ -377,7 +446,11 @@ namespace ClassicUO.Game.UI.Gumps
 
                 _entries = new Deque<RenderedText>();
                 _hours = new Deque<RenderedText>();
-                _text_types = new Deque<TextType>();
+                // ## BEGIN - END ## // MULTIJOURNAL
+                //_text_types = new Deque<TextType>();
+                // ## BEGIN - END ## // MULTIJOURNAL
+                _text_types = new Deque<MessageType>();
+                // ## BEGIN - END ## // MULTIJOURNAL
 
                 WantUpdateSize = false;
             }
@@ -396,7 +469,11 @@ namespace ClassicUO.Game.UI.Gumps
                 {
                     RenderedText t = _entries[i];
                     RenderedText hour = _hours[i];
-                    TextType type = _text_types[i];
+                    // ## BEGIN - END ## // MULTIJOURNAL
+                    //TextType type = _text_types[i];
+                    // ## BEGIN - END ## // MULTIJOURNAL
+                    MessageType type = _text_types[i];
+                    // ## BEGIN - END ## // MULTIJOURNAL
 
 
                     if (!CanBeDrawn(type))
@@ -546,7 +623,11 @@ namespace ClassicUO.Game.UI.Gumps
                 ushort hue,
                 bool isUnicode,
                 DateTime time,
-                TextType text_type
+                // ## BEGIN - END ## // MULTIJOURNAL
+                //TextType text_type
+                // ## BEGIN - END ## // MULTIJOURNAL
+                MessageType text_type
+            // ## BEGIN - END ## // MULTIJOURNAL
             )
             {
                 bool maxScroll = _scrollBar.Value == _scrollBar.MaxValue;
@@ -575,7 +656,7 @@ namespace ClassicUO.Game.UI.Gumps
                 (
                     text,
                     hue,
-                    (byte) font,
+                    (byte)font,
                     isUnicode,
                     FontStyle.Indention | FontStyle.BlackBorder,
                     maxWidth: Width - (18 + h.Width)
@@ -593,30 +674,36 @@ namespace ClassicUO.Game.UI.Gumps
                 }
             }
 
+            // ## BEGIN - END ## // MULTIJOURNAL
+            /*
             private static bool CanBeDrawn(TextType type)
             {
                 if (type == TextType.CLIENT && !ProfileManager.CurrentProfile.ShowJournalClient)
                 {
                     return false;
                 }
-
                 if (type == TextType.SYSTEM && !ProfileManager.CurrentProfile.ShowJournalSystem)
                 {
                     return false;
                 }
-
                 if (type == TextType.OBJECT && !ProfileManager.CurrentProfile.ShowJournalObjects)
                 {
                     return false;
                 }
-
                 if (type == TextType.GUILD_ALLY && !ProfileManager.CurrentProfile.ShowJournalGuildAlly)
                 {
                     return false;
                 }
-
                 return true;
             }
+            */
+            // ## BEGIN - END ## // MULTIJOURNAL
+            bool CanBeDrawn(MessageType type)
+            {
+                var ind = Array.IndexOf(types, type);
+                return ind == -1 ? false : _filter[ind];
+            }
+            // ## BEGIN - END ## // MULTIJOURNAL
 
             public override void Dispose()
             {

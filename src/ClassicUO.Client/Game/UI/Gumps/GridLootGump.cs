@@ -126,7 +126,8 @@ namespace ClassicUO.Game.UI.Gumps
                 20,
                 ButtonAction.Activate,
                 ResGumps.SetLootBag
-            ) { ButtonParameter = 2, IsSelectable = false };
+            )
+            { ButtonParameter = 2, IsSelectable = false };
 
             Add(_setlootbag);
 
@@ -138,7 +139,8 @@ namespace ClassicUO.Game.UI.Gumps
                 20,
                 ButtonAction.Activate,
                 ResGumps.Prev
-            ) { ButtonParameter = 0, IsSelectable = false };
+            )
+            { ButtonParameter = 0, IsSelectable = false };
 
             _buttonNext = new NiceButton
             (
@@ -148,7 +150,8 @@ namespace ClassicUO.Game.UI.Gumps
                 20,
                 ButtonAction.Activate,
                 ResGumps.Next
-            ) { ButtonParameter = 1, IsSelectable = false };
+            )
+            { ButtonParameter = 1, IsSelectable = false };
 
             _buttonNext.IsVisible = _buttonPrev.IsVisible = false;
 
@@ -167,7 +170,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             Add
             (
-                _corpseNameLabel = new Label(GetCorpseName(), true, 0x0481, align: TEXT_ALIGN_TYPE.TS_CENTER, maxwidth:300)
+                _corpseNameLabel = new Label(GetCorpseName(), true, 0x0481, align: TEXT_ALIGN_TYPE.TS_CENTER, maxwidth: 300)
                 {
                     Width = 300,
                     X = 0,
@@ -267,37 +270,53 @@ namespace ClassicUO.Game.UI.Gumps
             int line = 1;
             int row = 0;
 
-            for (LinkedObject i = _corpse.Items; i != null; i = i.Next)
+            // ## BEGIN - END ## // GRIDLOOT
+            //for (LinkedObject i = _corpse.Items; i != null; i = i.Next)
+            //{
+            //  Item it = (Item) i;
+            // ## BEGIN - END ## // GRIDLOOT
+            for (int displayGroup = 0; displayGroup < 2; displayGroup++)
             {
-                Item it = (Item) i;
-
-                if (it.IsLootable)
+                for (LinkedObject i = _corpse.Items; i != null; i = i.Next)
                 {
-                    GridLootItem gridItem = new GridLootItem(it, GRID_ITEM_SIZE);
+                    Item it = (Item)i;
 
-                    if (x >= MAX_WIDTH - 20)
+                    if (!ItemBelongsToGroup(it, displayGroup))
                     {
-                        x = 20;
-                        ++line;
-
-                        y += gridItem.Height + 20;
-
-                        if (y >= MAX_HEIGHT - 60)
-                        {
-                            _pagesCount++;
-                            y = 20;
-                            //line = 1;
-                        }
+                        continue;
                     }
+                    // ## BEGIN - END ## // GRIDLOOT
 
-                    gridItem.X = x;
-                    gridItem.Y = y + 20;
-                    Add(gridItem, _pagesCount);
+                    if (it.IsLootable)
+                    {
+                        GridLootItem gridItem = new GridLootItem(it, GRID_ITEM_SIZE);
 
-                    x += gridItem.Width + 20;
-                    ++row;
-                    ++count;
+                        if (x >= MAX_WIDTH - 20)
+                        {
+                            x = 20;
+                            ++line;
+
+                            y += gridItem.Height + 20;
+
+                            if (y >= MAX_HEIGHT - 60)
+                            {
+                                _pagesCount++;
+                                y = 20;
+                                //line = 1;
+                            }
+                        }
+
+                        gridItem.X = x;
+                        gridItem.Y = y + 20;
+                        Add(gridItem, _pagesCount);
+
+                        x += gridItem.Width + 20;
+                        ++row;
+                        ++count;
+                    }
+                    // ## BEGIN - END ## // GRIDLOOT
                 }
+                // ## BEGIN - END ## // GRIDLOOT
             }
 
             _background.Width = (GRID_ITEM_SIZE + 20) * row + 20;
@@ -339,7 +358,17 @@ namespace ClassicUO.Game.UI.Gumps
                 IsVisible = true;
             }
         }
+        // ## BEGIN - END ## // GRIDLOOT
+        private bool ItemBelongsToGroup(Item it, int group)
+        {
+            // Note: items must be assigned to groups in a mutually-exclusive manner, so that each item occurs only once in the grid
 
+            if (it.ItemData.IsStackable)
+                return group > 0;
+            else
+                return group == 0;
+        }
+        // ## BEGIN - END ## // GRIDLOOT
         public override void Dispose()
         {
             if (_corpse != null)
@@ -442,7 +471,7 @@ namespace ClassicUO.Game.UI.Gumps
         {
             return _corpse.Name?.Length > 0 ? _corpse.Name : "a corpse";
         }
-        
+
         private class GridLootItem : Control
         {
             private readonly HitBox _hit;
@@ -501,7 +530,7 @@ namespace ClassicUO.Game.UI.Gumps
                 {
                     if (e.Button == MouseButtonType.Left)
                     {
-                        GameActions.GrabItem(item, (ushort) amount.Value);
+                        GameActions.GrabItem(item, (ushort)amount.Value);
                     }
                 };
 
@@ -561,7 +590,7 @@ namespace ClassicUO.Game.UI.Gumps
                         hueVector
                     );
                 }
-                
+
                 hueVector = ShaderHueTranslator.GetHueVector(0);
 
                 batcher.DrawRectangle

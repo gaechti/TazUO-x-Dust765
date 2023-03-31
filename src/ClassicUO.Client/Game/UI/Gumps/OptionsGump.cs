@@ -160,6 +160,10 @@ namespace ClassicUO.Game.UI.Gumps
         private Checkbox _showInfoBar;
         private Checkbox _ignoreAllianceMessages;
         private Checkbox _ignoreGuildMessages;
+        // ## BEGIN - END ## // MULTIJOURNAL
+        private DataBox _journalBox;
+        private List<JournalBuilderControl> _journalBuilderControls;
+        // ## BEGIN - END ## // MULTIJOURNAL
 
         // general
         private HSliderBar _sliderFPS, _circleOfTranspRadius;
@@ -267,6 +271,15 @@ namespace ClassicUO.Game.UI.Gumps
         private InputField _pullEnemyBarsX, _pullEnemyBarsY, _pullEnemyBarsFinalLocationX, _pullEnemyBarsFinalLocationY;
         private InputField _pullPartyAllyBarsX, _pullPartyAllyBarsY, _pullPartyAllyBarsFinalLocationX, _pullPartyAllyBarsFinalLocationY;
         // ## BEGIN - END ## // ADVMACROS
+        // ## BEGIN - END ## // AUTOMATIONS
+        private Checkbox _autoWorldmapMarker;
+        private Checkbox _autoRangeDisplayAlways;
+        private ClickableColorBox _autoRangeDisplayHue;
+        // ## BEGIN - END ## // AUTOMATIONS
+        // ## BEGIN - END ## // LOBBY
+        private InputField _lobbyIP, _lobbyPort;
+        // ## BEGIN - END ## // LOBBY
+        // ## BEGIN - END ## // BASICSETUP
         // ## BEGIN - END ## // BASICSETUP
 
 
@@ -475,6 +488,9 @@ namespace ClassicUO.Game.UI.Gumps
             // ## BEGIN - END ## // NAMEOVERHEAD
             Add(new NiceButton(10, 10 + 30 * i++, 140, 25, ButtonAction.SwitchPage, "Name Overhead Options") { ButtonParameter = 13 });
             // ## BEGIN - END ## // NAMEOVERHEAD
+            // ## BEGIN - END ## // MULTIJOURNAL
+            Add(new NiceButton(10, 10 + 30 * i++, 140, 25, ButtonAction.SwitchPage, "Multi Journal") { ButtonParameter = 14 });
+            // ## BEGIN - END ## // MULTIJOURNAL
 
             // ## BEGIN - END ## // BASICSETUP
             Add(new NiceButton(10, 10 + 30 * i++, 140, 25, ButtonAction.SwitchPage, "Taz") { ButtonParameter = 16 });
@@ -585,6 +601,9 @@ namespace ClassicUO.Game.UI.Gumps
             // ## BEGIN - END ## // NAMEOVERHEAD
             BuildNameOverhead();
             // ## BEGIN - END ## // NAMEOVERHEAD
+            // ## BEGIN - END ## // MULTIJOURNAL
+            BuildMultiJournal();
+            // ## BEGIN - END ## // MULTIJOURNAL
             // ## BEGIN - END ## // BASICSETUP
             BuildDust();
             Build765();
@@ -4116,6 +4135,67 @@ namespace ClassicUO.Game.UI.Gumps
         }
         // ## BEGIN - END ## // NAMEOVERHEAD
 
+        // ## BEGIN - END ## // MULTIJOURNAL
+        private void BuildMultiJournal()
+        {
+            const int PAGE = 14;
+
+            ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 420, true);
+
+            int startX = 5;
+            int startY = 5;
+
+            DataBox box = new DataBox(startX, startY, rightArea.Width - 15, 1);
+            box.WantUpdateSize = true;
+            rightArea.Add(box);
+
+            NiceButton nb = new NiceButton
+                (startX, startY, 105, 20, ButtonAction.Activate, ResGumps.AddItem, 0, TEXT_ALIGN_TYPE.TS_LEFT)
+            {
+                ButtonParameter = -1,
+                IsSelectable = false,
+                IsSelected = false
+            };
+
+            nb.MouseUp += (sender, e) =>
+            {
+                uint serial = (uint)_journalBox.GetControls<JournalBuilderControl>().Count() + 1;
+                JournalBuilderControl jbc = new JournalBuilderControl(new JournalItem(ResGumps.Journal, 0, Enumerable.Repeat(true, Enum.GetValues(typeof(MessageType)).Length).ToArray(), serial));
+                jbc.X = 5;
+                jbc.Y = _journalBox.Children.Count * jbc.Height;
+                _journalBuilderControls.Add(jbc);
+                _journalBox.Add(jbc);
+                _journalBox.WantUpdateSize = true;
+                UIManager.Add(new JournalGump(serial, jbc.LabelText, jbc.Hue, jbc.Filter) { X = 64, Y = 64 });
+            };
+
+            rightArea.Add(nb);
+
+            startY += nb.Height + 2;
+
+            _journalBox = new DataBox(startX, startY, 10, 10)
+            {
+                WantUpdateSize = true
+            };
+
+            List<JournalItem> _journalItems = World.Journal.GetJournals();
+            _journalBuilderControls = new List<JournalBuilderControl>();
+
+            for (int i = 0; i < _journalItems.Count; i++)
+            {
+                JournalBuilderControl jbc = new JournalBuilderControl(_journalItems[i]);
+                jbc.X = 5;
+                jbc.Y = i * jbc.Height;
+                _journalBuilderControls.Add(jbc);
+                _journalBox.Add(jbc);
+            }
+
+            rightArea.Add(_journalBox);
+
+            Add(rightArea, PAGE);
+        }
+        // ## BEGIN - END ## // MULTIJOURNAL
+
         private void BuildDust()
         {
             const int PAGE = 16;
@@ -4565,6 +4645,9 @@ namespace ClassicUO.Game.UI.Gumps
             section.Add(AddLabel(null, "UCCLinesToggleLT (toggle on / off UCC Lines LastTarget)", startX, startY));
             section.Add(AddLabel(null, "UCCLinesToggleHM (toggle on / off UCC Lines Hunting Mode)", startX, startY));
             // ## BEGIN - END ## // LINES
+            // ## BEGIN - END ## // AUTOMATIONS
+            section.Add(AddLabel(null, "AutoMeditate (toggle on / off automed)", startX, startY));
+            // ## BEGIN - END ## // AUTOMATIONS
             // ## BEGIN - END ## // MACROS
             SettingsSection section2 = AddSettingsSection(box, "-----SIMPLE MACROS-----");
             section2.Y = section.Bounds.Bottom + 40;
@@ -4827,7 +4910,107 @@ namespace ClassicUO.Game.UI.Gumps
             _pullPartyAllyBarsFinalLocationY.SetText(_currentProfile.PullPartyAllyBarsFinalLocation.Y.ToString());
             section3.AddRight(AddLabel(null, "FY", 0, 0), 2);
             startY += _pullPartyAllyBarsFinalLocationY.Height + 2;
+            // ## BEGIN - END ## // AUTOMATIONS
+            SettingsSection section4 = AddSettingsSection(box, "-----AUTOMATIONS-----");
+            section4.Y = section3.Bounds.Bottom + 40;
+            startY = section3.Bounds.Bottom + 40;
+
+            section4.Add(AddLabel(null, "write in chat or use macro to enable / disable:", startX, startY));
+            section4.Add(AddLabel(null, "(runs in background until disabled)", startX, startY));
+            section4.Add(AddLabel(null, "-automed or macro AutoMeditate (auto meditates \n with 2.5s delay and not targeting)", startX, startY));
+            section4.Add(AddLabel(null, "-engange (auto engage and pathfind to last target)", startX, startY));
+
+            SettingsSection section5 = AddSettingsSection(box, "-----MISC-----");
+            section5.Y = section4.Bounds.Bottom + 40;
+            startY = section4.Bounds.Bottom + 40;
+
+            section5.Add(AddLabel(null, "write in chat to enable / disable:", startX, startY));
+            section5.Add(AddLabel(null, "-mimic (mimic harmful spells 1:1, on beneficial macro defendSelf/defendParty)", startX, startY));
+            section5.Add(AddLabel(null, "Macro: SetMimic_PlayerSerial (define the player to mimic)", startX, startY));
+            section5.Add(AddLabel(null, "-marker X Y (place a dot and line to X Y on world map \n use -marker to remove it)", startX, startY));
+            section5.Add(_autoWorldmapMarker = AddCheckBox(null, "Auto add marker for MapGumps (ie. T-Maps)", _currentProfile.AutoWorldmapMarker, startX, startY));
+            startY += _autoWorldmapMarker.Height + 2;
+            section5.Add(AddLabel(null, "-df (if GreaterHeal cursor is up and you or a party member \n " +
+                                                "gets hit by EB, Explor or FS \n " +
+                                                "and your or the party members condition is met \n " +
+                                                "greater heal will be cast on you or party member \n " +
+                                                "Condition: Poisoned and HP smaller than random between 65 - 80 \n " +
+                                                "Condition: HP smaller than random between 40-70)", startX, startY));
+
+            //
+            section5.Add(AddLabel(null, "-autorange (show range depending on archery equipment)", startX, startY));
+            section5.Add(AddLabel(null, "(configure range for every ranged weapon in the autorange.txt file!)", startX, startY));
+            section5.Add(_autoRangeDisplayAlways = AddCheckBox(null, "always have -autorange ON", _currentProfile.AutoRangeDisplayAlways, startX, startY));
+            startY += _autoRangeDisplayAlways.Height + 2;
+            section5.Add(_autoRangeDisplayHue = AddColorBox(null, startX, startY, _currentProfile.AutoRangeDisplayHue, ""));
+            startY += _autoRangeDisplayHue.Height + 2;
+            section5.AddRight(AddLabel(null, "Hue", 0, 0), 2);
+            //
+            // ## BEGIN - END ## // AUTOMATIONS
             // ## BEGIN - END ## // ADVMACROS
+            // ## BEGIN - END ## // LOBBY
+            SettingsSection section6 = AddSettingsSection(box, "-----LOBBY-----");
+            section6.Y = section5.Bounds.Bottom + 40;
+            startY = section5.Bounds.Bottom + 40;
+
+            section6.Add(AddLabel(null, "write in chat to enable / disable:", startX, startY));
+            section6.Add(AddLabel(null, "-lobby help (show help menu)", startX, startY));
+            section6.Add(AddLabel(null, "-lobby status (show status)", startX, startY));
+            section6.Add(AddLabel(null, "-lobby connect <IP> (connect to IP)", startX, startY));
+            section6.Add(AddLabel(null, "-lobby diconnect (disconnect)", startX, startY));
+            section6.Add(AddLabel(null, "-lobby target (send your lasttarget to be everyones)", startX, startY));
+            section6.Add(AddLabel(null, "-lobby cast <SPELLNAME> (makes everyone cast a spell)", startX, startY));
+            section6.Add(AddLabel(null, "-lobby drop (drop everyones spell on last target)", startX, startY));
+            section6.Add(AddLabel(null, "-lobby attack (send your lasttarget to be everyones and everyone attacks it)", startX, startY));
+
+            section6.Add(AddLabel(null, "-autohid ((needs connected lobby) broadcast your position when hidden)", startX, startY));
+
+            section6.Add(AddLabel(null, "Macro: LobbyConnect (connect to IP and Port)", startX, startY));
+            section6.Add
+            (
+                _lobbyIP = AddInputField
+                (
+                    null,
+                    startX, startY,
+                    150,
+                    TEXTBOX_HEIGHT,
+                    null,
+                    80,
+                    false,
+                    false,
+                    99999999
+                )
+            );
+            _lobbyIP.SetText(_currentProfile.LobbyIP.ToString());
+
+            startY += _lobbyIP.Height + 2;
+            section6.AddRight(AddLabel(null, "Lobby IP", 0, 0), 2);
+
+            section6.Add
+            (
+                _lobbyPort = AddInputField
+                (
+                    null,
+                    startX, startY,
+                    50,
+                    TEXTBOX_HEIGHT,
+                    null,
+                    80,
+                    false,
+                    true,
+                    99999999
+                )
+            );
+            _lobbyPort.SetText(_currentProfile.LobbyPort.ToString());
+            startY += _lobbyPort.Height + 2;
+            section6.AddRight(AddLabel(null, "Lobby Port", 0, 0), 2);
+
+            section6.Add(AddLabel(null, "Macro: LobbyDisconnect (disconnect)", startX, startY));
+            section6.Add(AddLabel(null, "Macro: LobbyTarget (send your lasttarget to be everyones)", startX, startY));
+            section6.Add(AddLabel(null, "Macro: LobbyCastLightning (everyone casts Lightning)", startX, startY));
+            section6.Add(AddLabel(null, "Macro: LobbyCastEB (everyone casts Energy Bolt)", startX, startY));
+            section6.Add(AddLabel(null, "Macro: LobbyDrop (everyone drops spell on target)", startX, startY));
+            // ## BEGIN - END ## // LOBBY
 
             Add(rightArea, PAGE);
         }
@@ -7043,6 +7226,36 @@ namespace ClassicUO.Game.UI.Gumps
             int.TryParse(_pullPartyAllyBarsFinalLocationY.Text, out int pullPartyAllyBarsFinalLocationY);
             _currentProfile.PullPartyAllyBarsFinalLocation = new Point(pullPartyAllyBarsFinalLocationX, pullPartyAllyBarsFinalLocationY);
             // ## BEGIN - END ## // ADVMACROS
+            // ## BEGIN - END ## // AUTOMATIONS
+            _currentProfile.AutoWorldmapMarker = _autoWorldmapMarker.IsChecked;
+            _currentProfile.AutoRangeDisplayAlways = _autoRangeDisplayAlways.IsChecked;
+            _currentProfile.AutoRangeDisplayHue = _autoRangeDisplayHue.Hue;
+            // ## BEGIN - END ## // AUTOMATIONS
+            // ## BEGIN - END ## // LOBBY
+            _currentProfile.LobbyIP = _lobbyIP.Text;
+            _currentProfile.LobbyPort = _lobbyPort.Text;
+            // ## BEGIN - END ## // LOBBY
+            // ## BEGIN - END ## // MULTIJOURNAL
+            World.Journal.Empty();
+
+            for (int i = 0; i < _journalBuilderControls.Count; i++)
+            {
+                JournalBuilderControl jbc = _journalBuilderControls[i];
+                if (!jbc.IsDisposed)
+                {
+                    World.Journal.AddJournal(new JournalItem(jbc.LabelText, jbc.Hue, jbc.Filter, jbc.LocalSerial));
+                    JournalGump journal = UIManager.GetGump<JournalGump>(jbc.LocalSerial);
+                    if (journal != null)
+                    {
+                        journal.Title = jbc.LabelText;
+                        journal.Hue = jbc.Hue;
+                        journal.Filter = jbc.Filter;
+                    }
+                }
+            }
+
+            World.Journal.Save();
+            // ## BEGIN - END ## // MULTIJOURNAL
             // ## BEGIN - END ## // BASICSETUP
 
             _currentProfile?.Save(ProfileManager.ProfilePath);

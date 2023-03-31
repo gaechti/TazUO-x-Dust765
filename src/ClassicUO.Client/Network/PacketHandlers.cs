@@ -34,6 +34,9 @@ using ClassicUO.Assets;
 using ClassicUO.Configuration;
 using ClassicUO.Game;
 using ClassicUO.Game.Data;
+// ## BEGIN - END ## // AUTOMATIONS
+using ClassicUO.TazUO.Autos;
+// ## BEGIN - END ## // AUTOMATIONS
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.Scenes;
@@ -932,6 +935,10 @@ namespace ClassicUO.Network
                 }
             }
             // ## BEGIN - END ## // AUTOLOOT
+            // ## BEGIN - END ## // AUTOMATIONS
+            if (serial == ProfileManager.CurrentProfile.Mimic_PlayerSerial && type == MessageType.Spell && !string.IsNullOrEmpty(text))
+                AutoMimic.SyncByClilocString(serial, text);
+            // ## BEGIN - END ## // AUTOMATIONS
 
             // ## BEGIN - END ## // VISUAL HELPERS
             if (serial == World.Player.Serial && type == MessageType.Spell && !string.IsNullOrEmpty(text))
@@ -2213,6 +2220,10 @@ namespace ClassicUO.Network
                         UIManager.Add(gump);
                     }
                 }
+
+                // ## BEGIN - END ## // MULTIJOURNAL
+                World.Journal.Load();
+                // ## BEGIN - END ## // MULTIJOURNAL
             }
         }
 
@@ -2238,6 +2249,10 @@ namespace ClassicUO.Network
                         ushort y = p.ReadUInt16BE();
 
                         gump.AddPin(x, y);
+
+                        // ## BEGIN - END ## // AUTOMATIONS
+                        AutoWorldMapMarker.TmapPinXY(x, y);
+                        // ## BEGIN - END ## // AUTOMATIONS
 
                         break;
 
@@ -2458,6 +2473,10 @@ namespace ClassicUO.Network
                 false,
                 blendmode
             );
+
+            // ## BEGIN - END ## // AUTOMATIONS
+            Defender.gfxTrigger(source, target, graphic);
+            // ## BEGIN - END ## // AUTOMATIONS
         }
 
         private static void ClientViewRange(ref StackDataReader p)
@@ -3137,6 +3156,11 @@ namespace ClassicUO.Network
 
             MapGump gump = new MapGump(serial, gumpid, width, height);
 
+            // ## BEGIN - END ## // AUTOMATIONS
+            AutoWorldMapMarker.TmapMarker(startX, startY, endX, endY, width, height);
+            // ## BEGIN - END ## // AUTOMATIONS
+
+
             if (p[0] == 0xF5 || Client.Version >= Utility.ClientVersion.CV_308Z)
             {
                 ushort facet = 0;
@@ -3206,6 +3230,8 @@ namespace ClassicUO.Network
                 it.Opened = true;
             }
         }
+
+        
 
         private static void OpenBook(ref StackDataReader p)
         {

@@ -510,7 +510,19 @@ namespace ClassicUO.Configuration
         public Point PullPartyAllyBarsFinalLocation { get; set; } = new Point(1550, 0); // X difference needs to be 120 to get bars next to one another
         public uint CustomSerial { get; set; }
         public uint Mimic_PlayerSerial { get; set; }
-        // ## BEGIN - END ## // ADVMACROSf
+        // ## BEGIN - END ## // ADVMACROS
+        // ## BEGIN - END ## // AUTOMATIONS
+        public bool AutoWorldmapMarker { get; set; }
+        public bool AutoRangeDisplayAlways { get; set; } = false;
+        public bool AutoRangeDisplayActive { get; set; } = false;
+        public int AutoRangeDisplayActiveRange { get; set; } = 10;
+        public ushort AutoRangeDisplayHue { get; set; } = 0x0074;
+        // ## BEGIN - END ## // AUTOMATIONS
+        // ## BEGIN - END ## // LOBBY
+        public string LobbyIP { get; set; } = "127.0.0.1";
+        public string LobbyPort { get; set; } = "2596";
+        // ## BEGIN - END ## // LOBBY
+
 
         // ## BEGIN - END ## // VISUALRESPONSEMANAGER
         public bool VisualResponseManager { get; set; } = false;

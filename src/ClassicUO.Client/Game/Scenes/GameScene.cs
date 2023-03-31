@@ -273,6 +273,9 @@ namespace ClassicUO.Game.Scenes
 
             }
             // ## BEGIN - END ## // BUFFBAR/UCCSETTINGS
+            // ## BEGIN - END ## // AUTOMATIONS
+            ModulesManager.Load();
+            // ## BEGIN - END ## // AUTOMATIONS
 
             CircleOfTransparency.Create(ProfileManager.CurrentProfile.CircleOfTransparencyRadius);
            
@@ -433,6 +436,16 @@ namespace ClassicUO.Game.Scenes
             catch
             {
             }
+
+            // ## BEGIN - END ## // AUTOMATIONS
+            try
+            {
+                ModulesManager.Unload();
+            }
+            catch
+            {
+            }
+            // ## BEGIN - END ## // AUTOMATIONS
 
             TargetManager.Reset();
 

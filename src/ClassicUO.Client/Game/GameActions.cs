@@ -142,7 +142,7 @@ namespace ClassicUO.Game
 
         public static void OpenJournal()
         {
-            ResizableJournal resizableJournal = UIManager.GetGump<ResizableJournal>();
+            ResizableJournal resizableJournal = UIManager.GetGump<ResizableJournal>(0);
             if (resizableJournal == null)
                 UIManager.Add(new ResizableJournal());
             else
