@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using ClassicUO.Game;
 
 namespace ClassicUO.TazUO.TazUO
 {
@@ -231,6 +232,1105 @@ namespace ClassicUO.TazUO.TazUO
             return false;
         }
         // ## BEGIN - END ## // ART / HUE CHANGES
+        // ## BEGIN - END ## // VISUAL HELPERS
+        //GAME\GAMEOBJECTS\VIEWS\MOBILEVIEW.CS
+        public static ushort OwnAuraColorByHP()
+        {
+            ushort color = 0x0044;
+
+            int ww = World.Player.HitsMax;
+
+            if (ww > 0)
+            {
+                ww = World.Player.Hits * 100 / ww;
+
+                if (ww > 100)
+                    ww = 100;
+                else if (ww < 1)
+                    ww = 0;
+
+                World.Player.UpdateHits((byte)ww);
+            }
+
+            if (World.Player.HitsPercentage < 20)
+                color = 0x0021; //red
+            else if (World.Player.HitsPercentage < 40)
+                color = 0x002B; //red orange
+            else if (World.Player.HitsPercentage < 60)
+                color = 0x0030; //orange
+            else if (World.Player.HitsPercentage < 80)
+                color = 0x0035; //yellow (but shows green?)
+            else if (World.Player.HitsPercentage == 100)
+                color = (ushort)Notoriety.GetHue(World.Player.NotorietyFlag);
+            // "original colors from overhead %, < 30 0x0021, < 50 0x0030, < 80 0x0058"
+
+            return color;
+        }
+        public static ushort WeaponsHue(ushort hue)
+        {
+            if (ProfileManager.CurrentProfile.GlowingWeaponsType == 1)
+                hue = BRIGHT_WHITE_COLOR;
+            else if (ProfileManager.CurrentProfile.GlowingWeaponsType == 2)
+                hue = BRIGHT_PINK_COLOR;
+            else if (ProfileManager.CurrentProfile.GlowingWeaponsType == 3)
+                hue = BRIGHT_ICE_COLOR;
+            else if (ProfileManager.CurrentProfile.GlowingWeaponsType == 4)
+                hue = BRIGHT_FIRE_COLOR;
+            else if (ProfileManager.CurrentProfile.GlowingWeaponsType == 5)
+                hue = ProfileManager.CurrentProfile.HighlightGlowingWeaponsTypeHue;
+
+            return hue;
+        }
+        public static ushort LastTargetHue(Mobile mobile, ushort hue)
+        {
+            if (ProfileManager.CurrentProfile.HighlightLastTargetType == 1)
+                hue = BRIGHT_WHITE_COLOR;
+            else if (ProfileManager.CurrentProfile.HighlightLastTargetType == 2)
+                hue = BRIGHT_PINK_COLOR;
+            else if (ProfileManager.CurrentProfile.HighlightLastTargetType == 3)
+                hue = BRIGHT_ICE_COLOR;
+            else if (ProfileManager.CurrentProfile.HighlightLastTargetType == 4)
+                hue = BRIGHT_FIRE_COLOR;
+            else if (ProfileManager.CurrentProfile.HighlightLastTargetType == 5)
+                hue = ProfileManager.CurrentProfile.HighlightLastTargetTypeHue;
+
+            if (mobile.IsPoisoned)
+            {
+                if (ProfileManager.CurrentProfile.HighlightLastTargetTypePoison == 1)
+                    hue = BRIGHT_WHITE_COLOR;
+                else if (ProfileManager.CurrentProfile.HighlightLastTargetTypePoison == 2)
+                    hue = BRIGHT_PINK_COLOR;
+                else if (ProfileManager.CurrentProfile.HighlightLastTargetTypePoison == 3)
+                    hue = BRIGHT_ICE_COLOR;
+                else if (ProfileManager.CurrentProfile.HighlightLastTargetTypePoison == 4)
+                    hue = BRIGHT_FIRE_COLOR;
+                else if (ProfileManager.CurrentProfile.HighlightLastTargetTypePoison == 5)
+                    hue = BRIGHT_POISON_COLOR;
+                else if (ProfileManager.CurrentProfile.HighlightLastTargetTypePoison == 6)
+                    hue = ProfileManager.CurrentProfile.HighlightLastTargetTypePoisonHue;
+            }
+
+            if (mobile.IsParalyzed)
+            {
+                if (ProfileManager.CurrentProfile.HighlightLastTargetTypePara == 1)
+                    hue = BRIGHT_WHITE_COLOR;
+                else if (ProfileManager.CurrentProfile.HighlightLastTargetTypePara == 2)
+                    hue = BRIGHT_PINK_COLOR;
+                else if (ProfileManager.CurrentProfile.HighlightLastTargetTypePara == 3)
+                    hue = BRIGHT_ICE_COLOR;
+                else if (ProfileManager.CurrentProfile.HighlightLastTargetTypePara == 4)
+                    hue = BRIGHT_FIRE_COLOR;
+                else if (ProfileManager.CurrentProfile.HighlightLastTargetTypePara == 5)
+                    hue = BRIGHT_PARALYZE_COLOR;
+                else if (ProfileManager.CurrentProfile.HighlightLastTargetTypePara == 6)
+                    hue = ProfileManager.CurrentProfile.HighlightLastTargetTypeParaHue;
+            }
+
+            return hue;
+        }
+
+        //GAME\GAMECURSOR.CS
+        public static void UpdateSpelltime()
+        {
+            GameCursor._spellTime = 30 - ((Time.Ticks - GameCursor._startSpellTime) / 1000); // count down
+
+            // ## BEGIN - END ## // CURSOR
+            GameCursor._spellTimeText?.Destroy();
+            GameCursor._spellTimeText = RenderedText.Create(GameCursor._spellTime.ToString(), 0x0481, style: FontStyle.BlackBorder);
+            // ## BEGIN - END ## // CURSOR
+        }
+        public static void StartSpelltime()
+        {
+            GameCursor._startSpellTime = Time.Ticks;
+        }
+
+        //GAME\GAMEOBJECTS\VIEWS\ - MULTIVIEW.CS - STATICVIEW.CS - TILEVIEW.CS
+        //24 - Wall of Stone
+        //28 - Fire Field
+        //39 - Poison Field
+        //47 - Paralyze Field
+        //50 - Energy Field
+        //-
+        //48 - Reveal
+        //49 - Chain Lightning
+        //55 - Meteor Swarm
+        public static bool MultiFieldPreview(Multi obj)
+        {
+            if (GameCursor._spellTime >= 1)
+            {
+                if (GameActions.LastSpellIndexCursor == 24)
+                {
+                    //Calc _fieldEastToWest
+                    if (SelectedObject.Object == obj)
+                    {
+                        int PlayerX = World.Player.X;
+                        int PlayerY = World.Player.Y;
+
+                        int dx = PlayerX - obj.X;
+                        int dy = PlayerY - obj.Y;
+
+                        int rx = (dx - dy) * 44;
+                        int ry = (dx + dy) * 44;
+
+                        if (rx >= 0 && ry >= 0)
+                        {
+                            GameCursor._fieldEastToWest = false;
+                        }
+                        else if (rx >= 0)
+                        {
+                            GameCursor._fieldEastToWest = true;
+                        }
+                        else if (ry >= 0)
+                        {
+                            GameCursor._fieldEastToWest = true;
+                        }
+                        else
+                        {
+                            GameCursor._fieldEastToWest = false;
+                        }
+                    }
+
+                    if (GameCursor._fieldEastToWest is true)
+                    {
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                    }
+                    else if (GameCursor._fieldEastToWest is false)
+                    {
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                if (GameActions.LastSpellIndexCursor == 28 || GameActions.LastSpellIndexCursor == 39 || GameActions.LastSpellIndexCursor == 47 || GameActions.LastSpellIndexCursor == 50)
+                {
+                    //Calc _fieldEastToWest
+                    if (SelectedObject.Object == obj)
+                    {
+                        int PlayerX = World.Player.X;
+                        int PlayerY = World.Player.Y;
+
+                        int dx = PlayerX - obj.X;
+                        int dy = PlayerY - obj.Y;
+
+                        int rx = (dx - dy) * 44;
+                        int ry = (dx + dy) * 44;
+
+                        if (rx >= 0 && ry >= 0)
+                        {
+                            GameCursor._fieldEastToWest = false;
+                        }
+                        else if (rx >= 0)
+                        {
+                            GameCursor._fieldEastToWest = true;
+                        }
+                        else if (ry >= 0)
+                        {
+                            GameCursor._fieldEastToWest = true;
+                        }
+                        else
+                        {
+                            GameCursor._fieldEastToWest = false;
+                        }
+                    }
+
+                    if (GameCursor._fieldEastToWest is true)
+                    {
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                    }
+                    else if (GameCursor._fieldEastToWest is false)
+                    {
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                if (GameActions.LastSpellIndexCursor == 48 || GameActions.LastSpellIndexCursor == 49 || GameActions.LastSpellIndexCursor == 55)
+                {
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 66) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 88) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 66) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 0) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 66) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + -22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 66) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 88) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 0) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 66) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 0) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 88) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 66) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 66) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 0) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 88) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 0) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 66) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public static bool StaticFieldPreview(Static obj)
+        {
+            if (GameCursor._spellTime >= 1)
+            {
+                if (GameActions.LastSpellIndexCursor == 24)
+                {
+                    //Calc _fieldEastToWest
+                    if (SelectedObject.Object == obj)
+                    {
+                        int PlayerX = World.Player.X;
+                        int PlayerY = World.Player.Y;
+
+                        int dx = PlayerX - obj.X;
+                        int dy = PlayerY - obj.Y;
+
+                        int rx = (dx - dy) * 44;
+                        int ry = (dx + dy) * 44;
+
+                        if (rx >= 0 && ry >= 0)
+                        {
+                            GameCursor._fieldEastToWest = false;
+                        }
+                        else if (rx >= 0)
+                        {
+                            GameCursor._fieldEastToWest = true;
+                        }
+                        else if (ry >= 0)
+                        {
+                            GameCursor._fieldEastToWest = true;
+                        }
+                        else
+                        {
+                            GameCursor._fieldEastToWest = false;
+                        }
+                    }
+
+                    if (GameCursor._fieldEastToWest is true)
+                    {
+
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                    }
+                    else if (GameCursor._fieldEastToWest is false)
+                    {
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                if (GameActions.LastSpellIndexCursor == 28 || GameActions.LastSpellIndexCursor == 39 || GameActions.LastSpellIndexCursor == 47 || GameActions.LastSpellIndexCursor == 50)
+                {
+                    //Calc _fieldEastToWest
+                    if (SelectedObject.Object == obj)
+                    {
+                        int PlayerX = World.Player.X;
+                        int PlayerY = World.Player.Y;
+
+                        int dx = PlayerX - obj.X;
+                        int dy = PlayerY - obj.Y;
+
+                        int rx = (dx - dy) * 44;
+                        int ry = (dx + dy) * 44;
+
+                        if (rx >= 0 && ry >= 0)
+                        {
+                            GameCursor._fieldEastToWest = false;
+                        }
+                        else if (rx >= 0)
+                        {
+                            GameCursor._fieldEastToWest = true;
+                        }
+                        else if (ry >= 0)
+                        {
+                            GameCursor._fieldEastToWest = true;
+                        }
+                        else
+                        {
+                            GameCursor._fieldEastToWest = false;
+                        }
+                    }
+
+                    if (GameCursor._fieldEastToWest is true)
+                    {
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                    }
+                    else if (GameCursor._fieldEastToWest is false)
+                    {
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                if (GameActions.LastSpellIndexCursor == 48 || GameActions.LastSpellIndexCursor == 49 || GameActions.LastSpellIndexCursor == 55)
+                {
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 66) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 88) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 66) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 0) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 66) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + -22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 66) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 88) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 0) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 66) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 0) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 88) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 66) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 66) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 0) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 88) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 0) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 66) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public static bool LandFieldPreview(Land obj)
+        {
+            if (GameCursor._spellTime >= 1)
+            {
+                if (GameActions.LastSpellIndexCursor == 24)
+                {
+                    //Calc _fieldEastToWest
+                    if (SelectedObject.Object == obj)
+                    {
+                        int PlayerX = World.Player.X;
+                        int PlayerY = World.Player.Y;
+
+                        int dx = PlayerX - obj.X;
+                        int dy = PlayerY - obj.Y;
+
+                        int rx = (dx - dy) * 44;
+                        int ry = (dx + dy) * 44;
+
+                        if (rx >= 0 && ry >= 0)
+                        {
+                            GameCursor._fieldEastToWest = false;
+                        }
+                        else if (rx >= 0)
+                        {
+                            GameCursor._fieldEastToWest = true;
+                        }
+                        else if (ry >= 0)
+                        {
+                            GameCursor._fieldEastToWest = true;
+                        }
+                        else
+                        {
+                            GameCursor._fieldEastToWest = false;
+                        }
+                    }
+
+                    if (GameCursor._fieldEastToWest is true)
+                    {
+
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                    }
+                    else if (GameCursor._fieldEastToWest is false)
+                    {
+
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                if (GameActions.LastSpellIndexCursor == 28 || GameActions.LastSpellIndexCursor == 39 || GameActions.LastSpellIndexCursor == 47 || GameActions.LastSpellIndexCursor == 50)
+                {
+                    //Calc _fieldEastToWest
+                    if (SelectedObject.Object == obj)
+                    {
+                        int PlayerX = World.Player.X;
+                        int PlayerY = World.Player.Y;
+
+                        int dx = PlayerX - obj.X;
+                        int dy = PlayerY - obj.Y;
+
+                        int rx = (dx - dy) * 44;
+                        int ry = (dx + dy) * 44;
+
+                        if (rx >= 0 && ry >= 0)
+                        {
+                            GameCursor._fieldEastToWest = false;
+                        }
+                        else if (rx >= 0)
+                        {
+                            GameCursor._fieldEastToWest = true;
+                        }
+                        else if (ry >= 0)
+                        {
+                            GameCursor._fieldEastToWest = true;
+                        }
+                        else
+                        {
+                            GameCursor._fieldEastToWest = false;
+                        }
+                    }
+
+                    if (GameCursor._fieldEastToWest is true)
+                    {
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                    }
+                    else if (GameCursor._fieldEastToWest is false)
+                    {
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                if (GameActions.LastSpellIndexCursor == 48 || GameActions.LastSpellIndexCursor == 49 || GameActions.LastSpellIndexCursor == 55)
+                {
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 66) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 88) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 66) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 0) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 66) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + -22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 66) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 88) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 0) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 66) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 0) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 88) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 66) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 66) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 0) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 88) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 0) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 66) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public static bool MobileFieldPreview(Mobile obj)
+        {
+            if (GameCursor._spellTime >= 1)
+            {
+                if (GameActions.LastSpellIndexCursor == 24)
+                {
+                    //Calc _fieldEastToWest
+                    if (SelectedObject.Object == obj)
+                    {
+                        int PlayerX = World.Player.X;
+                        int PlayerY = World.Player.Y;
+
+                        int dx = PlayerX - obj.X;
+                        int dy = PlayerY - obj.Y;
+
+                        int rx = (dx - dy) * 44;
+                        int ry = (dx + dy) * 44;
+
+                        if (rx >= 0 && ry >= 0)
+                        {
+                            GameCursor._fieldEastToWest = false;
+                        }
+                        else if (rx >= 0)
+                        {
+                            GameCursor._fieldEastToWest = true;
+                        }
+                        else if (ry >= 0)
+                        {
+                            GameCursor._fieldEastToWest = true;
+                        }
+                        else
+                        {
+                            GameCursor._fieldEastToWest = false;
+                        }
+                    }
+
+                    if (GameCursor._fieldEastToWest is true)
+                    {
+
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                    }
+                    else if (GameCursor._fieldEastToWest is false)
+                    {
+
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                if (GameActions.LastSpellIndexCursor == 28 || GameActions.LastSpellIndexCursor == 39 || GameActions.LastSpellIndexCursor == 47 || GameActions.LastSpellIndexCursor == 50)
+                {
+                    //Calc _fieldEastToWest
+                    if (SelectedObject.Object == obj)
+                    {
+                        int PlayerX = World.Player.X;
+                        int PlayerY = World.Player.Y;
+
+                        int dx = PlayerX - obj.X;
+                        int dy = PlayerY - obj.Y;
+
+                        int rx = (dx - dy) * 44;
+                        int ry = (dx + dy) * 44;
+
+                        if (rx >= 0 && ry >= 0)
+                        {
+                            GameCursor._fieldEastToWest = false;
+                        }
+                        else if (rx >= 0)
+                        {
+                            GameCursor._fieldEastToWest = true;
+                        }
+                        else if (ry >= 0)
+                        {
+                            GameCursor._fieldEastToWest = true;
+                        }
+                        else
+                        {
+                            GameCursor._fieldEastToWest = false;
+                        }
+                    }
+
+                    if (GameCursor._fieldEastToWest is true)
+                    {
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                    }
+                    else if (GameCursor._fieldEastToWest is false)
+                    {
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                        if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                if (GameActions.LastSpellIndexCursor == 48 || GameActions.LastSpellIndexCursor == 49 || GameActions.LastSpellIndexCursor == 55)
+                {
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 66) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 88) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 66) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 0) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 66) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + -22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 66) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 88) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 0) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 66) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 0) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 88) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 66) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 66) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 0) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 88) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 0) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 66) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X - 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y + 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 22) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 22) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                    if (SelectedObject.Object != null && (SelectedObject.Object.RealScreenPosition.X + 44) == obj.RealScreenPosition.X && (SelectedObject.Object.RealScreenPosition.Y - 44) == obj.RealScreenPosition.Y)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        //NETWORK\PACKETHANDLERS.CS
+        public static void SpellCastFromCliloc(string text)
+        {
+            if (SpellDefinition.WordToTargettype.TryGetValue(text, out SpellDefinition spell))
+            {
+                GameActions.LastSpellIndexCursor = spell.ID;
+            }
+            else
+            {
+                //THIS IS INCASE RAZOR OR ANOTHER ASSISTANT REWRITES THE STRING
+
+                foreach (var key in SpellDefinition.WordToTargettype.Keys)
+                {
+                    if (text.Contains(key)) //SPELL FOUND
+                    {
+                        GameActions.LastSpellIndexCursor = SpellDefinition.WordToTargettype[key].ID;
+
+                        //break; //DONT BREAK LOOP BECAUSE OF IN NOX / IN NOX GRAV
+                    }
+                }
+            }
+        }
+        // ## BEGIN - END ## // VISUAL HELPERS
+        // ## BEGIN - END ## // CURSOR
+        //GAME\GAMECURSOR.CS
+        public static ushort SpellIconHue(ushort hue)
+        {
+            switch (TargetManager.TargetingType)
+            {
+                case TargetType.Neutral:
+                    hue = 0x0000;  //BETTER HUE? 0x03B2
+                    return hue;
+
+                case TargetType.Harmful:
+                    hue = 0x0023;
+                    return hue;
+
+                case TargetType.Beneficial:
+                    hue = 0x005A;
+                    return hue;
+            }
+            return hue;
+        }
+        // ## BEGIN - END ## // CURSOR
 
     }
 }
