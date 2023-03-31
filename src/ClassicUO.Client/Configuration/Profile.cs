@@ -533,8 +533,15 @@ namespace ClassicUO.Configuration
         public bool OnCastingGump { get; set; }
         public bool OnCastingGump_hidden { get; set; } = false;
         // ## BEGIN - END ## // ONCASTINGGUMP
-
+        // ## BEGIN - END ## // MISC3 SHOWALLLAYERS
+        public bool ShowAllLayers { get; set; }
+        public bool ShowAllLayersPaperdoll { get; set; }
+        public int ShowAllLayersPaperdoll_X { get; set; } = 166;
+        // ## BEGIN - END ## // MISC3 SHOWALLLAYERS
         // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+        // ## BEGIN - END ## // MISC3 THIEFSUPREME
+        public bool OverrideContainerOpenRange { get; set; }
+        // ## BEGIN - END ## // MISC3 THIEFSUPREME
         public bool VisualResponseManager { get; set; } = false;
         // ## BEGIN - END ## // VISUALRESPONSEMANAGER
         // ## BEGIN - END ## // BASICSETUP

@@ -4783,6 +4783,13 @@ namespace ClassicUO.Network
 
             string arguments = null;
 
+            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+            if (ProfileManager.CurrentProfile.VisualResponseManager)
+            {
+                World.VisualResponseManager.OnCliloc(cliloc);
+            }
+            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+
             // ## BEGIN - END ## // ONCASTINGGUMP
             if (ProfileManager.CurrentProfile.OnCastingGump)
             {

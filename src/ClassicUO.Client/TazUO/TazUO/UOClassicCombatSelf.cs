@@ -1411,6 +1411,9 @@ namespace ClassicUO.TazUO.TazUO
                                     _useWaitForTarget = false;
                                     _tickWaitForTarget = 0;
                                     GameActions.Print("UCC Self: Old Bandies applyed to self.");
+                                    // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+                                    World.VisualResponseManager.DrawArt(0x0E21);
+                                    // ## BEGIN - END ## // VISUALRESPONSEMANAGER
                                 }
                             }
                             else
@@ -1425,6 +1428,9 @@ namespace ClassicUO.TazUO.TazUO
                                         GameActions.DoubleClick(bandage);
                                         _tickLastActionTime = Time.Ticks;
                                         GameActions.Print("UCC Self: Old Bandies applyed to self.");
+                                        // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+                                        World.VisualResponseManager.DrawArt(0x0E21);
+                                        // ## BEGIN - END ## // VISUALRESPONSEMANAGER
                                     }
                                 }
                                 else
@@ -1447,6 +1453,9 @@ namespace ClassicUO.TazUO.TazUO
                                     NetClient.Socket.Send_TargetSelectedObject(bandage.Serial, World.Player.Serial);
                                     _tickLastActionTime = Time.Ticks;
                                     GameActions.Print("UCC Self: Bandies applyed to self.");
+                                    // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+                                    World.VisualResponseManager.DrawArt(0x0E21);
+                                    // ## BEGIN - END ## // VISUALRESPONSEMANAGER
                                 }
                             }
                             else
@@ -1482,6 +1491,9 @@ namespace ClassicUO.TazUO.TazUO
 
                         GameActions.DoubleClick(apple);
                         GameActions.Print("UCC Self: Apple Enhanced Used.");
+                        // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+                        World.VisualResponseManager.DrawArt(0x2fd8);
+                        // ## BEGIN - END ## // VISUALRESPONSEMANAGER
                         _tickLastActionTime = Time.Ticks;
                         //_tickStartAutoEApple = Time.Ticks;  //triggered from cliloc as you can fail
                         _lastMacroPot = 0;
@@ -1575,6 +1587,9 @@ namespace ClassicUO.TazUO.TazUO
 
                             GameActions.DoubleClick(redpouche);
                             GameActions.Print("UCC Self: Pouche used.");
+                            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+                            World.VisualResponseManager.DrawArt(0x0E79);
+                            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
                             _tickLastActionTime = Time.Ticks;
                             _tickStartAutoPouche = Time.Ticks;
 
@@ -1632,6 +1647,9 @@ namespace ClassicUO.TazUO.TazUO
 
                             GameActions.DoubleClick(curepotion);
                             GameActions.Print("UCC Self: Curing Poison.");
+                            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+                            World.VisualResponseManager.DrawArt(0x0F07);
+                            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
                             _tickLastActionTime = Time.Ticks;
                             _tickStartAutoCurepot = Time.Ticks;
                             _lastMacroPot = 0;
@@ -1691,6 +1709,9 @@ namespace ClassicUO.TazUO.TazUO
 
                             GameActions.DoubleClick(healpotion);
                             GameActions.Print("UCC Self: Healing Damage.");
+                            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+                            World.VisualResponseManager.DrawArt(0x0F0C);
+                            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
                             _tickLastActionTime = Time.Ticks;
                             _tickStartAutoHealpot = Time.Ticks;
                             _lastMacroPot = 0;
@@ -1750,6 +1771,9 @@ namespace ClassicUO.TazUO.TazUO
 
                             GameActions.DoubleClick(refreshpotion);
                             GameActions.Print("UCC Self: Refresh Potion.");
+                            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+                            World.VisualResponseManager.DrawArt(0xF0B);
+                            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
                             _tickLastActionTime = Time.Ticks;
                             _tickStartAutoRefreshpot = Time.Ticks;
                             _lastMacroPot = 0;
@@ -1810,6 +1834,9 @@ namespace ClassicUO.TazUO.TazUO
 
                             GameActions.DoubleClick(strengthpotion);
                             GameActions.Print("UCC Self: Strength Potion.");
+                            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+                            World.VisualResponseManager.DrawArt(0x0F09);
+                            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
                             _tickLastActionTime = Time.Ticks;
                             _tickStartStrengthpot = Time.Ticks;
                             _lastMacroPot = 0;
@@ -1867,6 +1894,9 @@ namespace ClassicUO.TazUO.TazUO
 
                             GameActions.DoubleClick(dexpotion);
                             GameActions.Print("UCC Self: Agility Potion.");
+                            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+                            World.VisualResponseManager.DrawArt(0x0F08);
+                            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
                             _tickLastActionTime = Time.Ticks;
                             _tickStartDexpot = Time.Ticks;
                             _lastMacroPot = 0;

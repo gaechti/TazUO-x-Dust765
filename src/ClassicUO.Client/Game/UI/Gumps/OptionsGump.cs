@@ -285,6 +285,16 @@ namespace ClassicUO.Game.UI.Gumps
         // ## BEGIN - END ## // ONCASTINGGUMP
         private Checkbox _onCastingGump, _onCastingGump_hidden;
         // ## BEGIN - END ## // ONCASTINGGUMP
+        // ## BEGIN - END ## // MISC3 SHOWALLLAYERS
+        private Checkbox _showAllLayers, _showAllLayersPaperdoll;
+        private InputField _showAllLayersPaperdoll_X;
+        // ## BEGIN - END ## // MISC3 SHOWALLLAYERS
+        // ## BEGIN - END ## // MISC3 THIEFSUPREME
+        private Checkbox _overrideContainerOpenRange;
+        // ## BEGIN - END ## // MISC3 THIEFSUPREME
+        // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+        private Checkbox _visualResponseManager;
+        // ## BEGIN - END ## // VISUALRESPONSEMANAGER
         // ## BEGIN - END ## // BASICSETUP
         // ## BEGIN - END ## // BASICSETUP
 
@@ -4631,6 +4641,40 @@ namespace ClassicUO.Game.UI.Gumps
             section10.Add(_useRazorEnhStatusGump = AddCheckBox(null, "Use Razor Enhanced status gump:", _currentProfile.UseRazorEnhStatusGump, startX, startY));
             startY += _useRazorEnhStatusGump.Height + 2;
             // ## BEGIN - END ## // STATUSGUMP
+            // ## BEGIN - END ## // MISC3 SHOWALLLAYERS
+            SettingsSection section11 = AddSettingsSection(box, "-----MISC3-----");
+            section11.Y = section10.Bounds.Bottom + 40;
+
+            startY = section10.Bounds.Bottom + 40;
+
+            section11.Add(_showAllLayers = AddCheckBox(null, "Show all equipment layers on mobiles ON / OFF", _currentProfile.ShowAllLayers, startX, startY));
+            startY += _showAllLayers.Height + 2;
+            section11.Add(_showAllLayersPaperdoll = AddCheckBox(null, "Show all equipment layers on paperdoll ON / OFF", _currentProfile.ShowAllLayersPaperdoll, startX, startY));
+            startY += _showAllLayersPaperdoll.Height + 2;
+
+            section11.Add
+            (
+                _showAllLayersPaperdoll_X = AddInputField
+                (
+                    null,
+                    startX, startY,
+                    50,
+                    TEXTBOX_HEIGHT,
+                    null,
+                    80,
+                    false,
+                    true,
+                    5000
+                )
+            );
+            _showAllLayersPaperdoll_X.SetText(_currentProfile.ShowAllLayersPaperdoll_X.ToString());
+            section11.AddRight(AddLabel(null, "X ( reopen paperdoll after changes )", 0, 0), 2);
+            startY += _showAllLayersPaperdoll_X.Height + 2;
+            // ## BEGIN - END ## // MISC3 SHOWALLLAYERS
+            // ## BEGIN - END ## // MISC3 THIEFSUPREME
+            section11.Add(_overrideContainerOpenRange = AddCheckBox(null, "Override container open range", _currentProfile.OverrideContainerOpenRange, startX, startY));
+            startY += _overrideContainerOpenRange.Height + 2;
+            // ## BEGIN - END ## // MISC3 THIEFSUPREME
             // ## BEGIN - END ## // BASICSETUP
 
             Add(rightArea, PAGE);
@@ -5107,6 +5151,10 @@ namespace ClassicUO.Game.UI.Gumps
             section.Add(_onCastingGump_hidden = AddCheckBox(null, "hide the gump", _currentProfile.OnCastingGump_hidden, startX, startY));
             startY += _highlightContainersWhenMouseIsOver.Height + 2;
             // ## BEGIN - END ## // ONCASTINGGUMP
+            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+            section.Add(_visualResponseManager = AddCheckBox(null, "Visual response manager ON / OFF", _currentProfile.VisualResponseManager, startX, startY));
+            startY += _visualResponseManager.Height + 2;
+            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
             // ## BEGIN - END ## // TEXTUREMANAGER
             SettingsSection section2 = AddSettingsSection(box, "-----Texture Manager-----");
             section2.Y = section.Bounds.Bottom + 40;
@@ -7290,6 +7338,18 @@ namespace ClassicUO.Game.UI.Gumps
             _currentProfile.OnCastingGump = _onCastingGump.IsChecked;
             _currentProfile.OnCastingGump_hidden = _onCastingGump_hidden.IsChecked;
             // ## BEGIN - END ## // ONCASTINGGUMP
+            // ## BEGIN - END ## // MISC3 SHOWALLLAYERS
+            _currentProfile.ShowAllLayers = _showAllLayers.IsChecked;
+            _currentProfile.ShowAllLayersPaperdoll = _showAllLayersPaperdoll.IsChecked;
+            _currentProfile.ShowAllLayersPaperdoll_X = int.Parse(_showAllLayersPaperdoll_X.Text);
+            // ## BEGIN - END ## // MISC3 SHOWALLLAYERS
+            // ## BEGIN - END ## // MISC3 THIEFSUPREME
+            _currentProfile.OverrideContainerOpenRange = _overrideContainerOpenRange.IsChecked;
+            // ## BEGIN - END ## // MISC3 THIEFSUPREME
+            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+            _currentProfile.VisualResponseManager = _visualResponseManager.IsChecked;
+            // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+
             // ## BEGIN - END ## // BASICSETUP
 
             _currentProfile?.Save(ProfileManager.ProfilePath);

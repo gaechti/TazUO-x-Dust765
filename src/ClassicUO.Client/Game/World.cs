@@ -48,6 +48,7 @@ using ClassicUO.Configuration;
 using ClassicUO.Game.Scenes;
 using ClassicUO.Utility.Logging;
 using ClassicUO.Assets;
+using ClassicUO.Dust765.Dust765;
 
 namespace ClassicUO.Game
 {
@@ -102,6 +103,9 @@ namespace ClassicUO.Game
         // ## BEGIN - END ## // BUFFBAR/UCCSETTINGS
         public static ClilocTriggers ClilocTriggers { get; } = new ClilocTriggers();
         // ## BEGIN - END ## // BUFFBAR/UCCSETTINGS
+        // ## BEGIN - END ## // VISUALRESPONSEMANAGER
+        public static VisualResponseManager VisualResponseManager { get; } = new VisualResponseManager();
+        // ## BEGIN - END ## // VISUALRESPONSEMANAGER
 
         public static CoolDownBarManager CoolDownBarManager { get; } = new CoolDownBarManager();
 
