@@ -1960,7 +1960,25 @@ namespace ClassicUO.Game.Managers
                         GameActions.CastSpell(29); //greater heal
 
                     break;
-                    // ## BEGIN - END ## // MACROS
+                // ## BEGIN - END ## // MACROS
+                // ## BEGIN - END ## // LINES
+                case MacroType.UCCLinesToggleLT:
+                    //UOClassicCombatLines.ClilocTriggerAddListEntryAll(); //ALL
+                    //UOClassicCombatLines.ClilocTriggerAddListEntryAllByNotoriety(NotorietyFlag.Innocent);
+                    //UOClassicCombatLines.ClilocTriggerAddListEntryAllByNotoriety(NotorietyFlag.Ally);
+                    //UOClassicCombatLines.ClilocTriggerAddListEntryAllByNotoriety(NotorietyFlag.Criminal);
+                    //UOClassicCombatLines.ClilocTriggerAddListEntryAllByNotoriety(NotorietyFlag.Gray);
+                    //UOClassicCombatLines.ClilocTriggerAddListEntryAllByNotoriety(NotorietyFlag.Enemy);
+                    //UOClassicCombatLines.ClilocTriggerAddListEntryAllByNotoriety(NotorietyFlag.Murderer);
+                    UOClassicCombatLines.ClilocTriggerToggleLT();
+
+                    break;
+
+                case MacroType.UCCLinesToggleHM:
+                    UOClassicCombatLines.ClilocTriggerToggleHM();
+
+                    break;
+                    // ## BEGIN - END ## // LINES
             }
 
 
@@ -2518,8 +2536,10 @@ namespace ClassicUO.Game.Managers
         // ## BEGIN - END ## // MACROS
         notimplemented13,
         SetTargetClientSide,
-        notimplemented15,
-        notimplemented16,
+        // ## BEGIN - END ## // LINES
+        UCCLinesToggleLT,
+        UCCLinesToggleHM,
+        // ## BEGIN - END ## // LINES
         CureGH,
         notimplemented18,
         notimplemented19,
