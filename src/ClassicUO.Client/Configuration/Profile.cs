@@ -344,6 +344,15 @@ namespace ClassicUO.Configuration
         public bool SpellOnCursor { get; set; }
         public bool ColorGameCursor { get; set; }
         // ## BEGIN - END ## // CURSOR
+        // ## BEGIN - END ## // OVERHEAD / UNDERCHAR
+        public bool OverheadRange { get; set; }
+        // ## BEGIN - END ## // OVERHEAD / UNDERCHAR
+        // ## BEGIN - END ## // OLDHEALTHLINES
+        public bool MultipleUnderlinesSelfParty { get; set; }
+        public bool MultipleUnderlinesSelfPartyBigBars { get; set; }
+        public int MultipleUnderlinesSelfPartyTransparency { get; set; } = 10;
+        public bool UseOldHealthBars { get; set; } = false;
+        // ## BEGIN - END ## // OLDHEALTHLINES
 
         // ## BEGIN - END ## // VISUALRESPONSEMANAGER
         public bool VisualResponseManager { get; set; } = false;

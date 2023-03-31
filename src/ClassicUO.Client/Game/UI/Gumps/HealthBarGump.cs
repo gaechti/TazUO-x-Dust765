@@ -35,6 +35,9 @@ using System.IO;
 using System.Xml;
 using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
+// ## BEGIN - END ## // OVERHEAD / UNDERCHAR
+using ClassicUO.TazUO.TazUO;
+// ## BEGIN - END ## // OVERHEAD / UNDERCHAR
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.UI.Controls;
@@ -46,6 +49,7 @@ using ClassicUO.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDL2;
+using ClassicUO.TazUO.TazUO;
 
 namespace ClassicUO.Game.UI.Gumps
 {
@@ -766,6 +770,10 @@ namespace ClassicUO.Game.UI.Gumps
                         _normalHits = true;
                     }
                 }
+                // ## BEGIN - END ## // OVERHEAD / UNDERCHAR
+                CombatCollection.UpdateOverheads(mobile);
+                // ## BEGIN - END ## // OVERHEAD / UNDERCHAR
+
 
                 // ## BEGIN - END ## // HEALTHBAR
                 if (ProfileManager.CurrentProfile != null)
@@ -2012,6 +2020,10 @@ namespace ClassicUO.Game.UI.Gumps
                 }
 
                 int barW = inparty ? 96 : 109;
+
+                // ## BEGIN - END ## // OVERHEAD / UNDERCHAR
+                CombatCollection.UpdateOverheads(mobile);
+                // ## BEGIN - END ## // OVERHEAD / UNDERCHAR
 
                 int hits = CalculatePercents(entity.HitsMax, entity.Hits, barW);
 
