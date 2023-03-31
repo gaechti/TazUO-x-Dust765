@@ -397,6 +397,14 @@ namespace ClassicUO.Configuration
         public bool NameOverheadPinnedToggled { get; set; } = false;
         public bool NameOverheadBackgroundToggled { get; set; } = false;
         // ## BEGIN - END ## // NAMEOVERHEAD
+        // ## BEGIN - END ## // UI/GUMPS
+        public bool UOClassicCombatLTBar { get; set; } = false;
+        public Point UOClassicCombatLTBarLocation { get; set; } = new Point(25, 25);
+        public bool UOClassicCombatLTBar_Locked { get; set; } = false;
+        public Point BandageGumpOffset { get; set; } = new Point(0, 0);
+        public bool BandageGump { get; set; }
+        public bool BandageGumpUpDownToggle { get; set; } = false;
+        // ## BEGIN - END ## // UI/GUMPS
 
         // ## BEGIN - END ## // VISUALRESPONSEMANAGER
         public bool VisualResponseManager { get; set; } = false;
