@@ -1409,6 +1409,17 @@ namespace ClassicUO.TazUO.TazUO
             return (hpcolor, maxhp, maxmana, maxstam);
         }
         // ## BEGIN - END ## // OLDHEALTHLINES
+        // ## BEGIN - END ## // MISC
+        //NETWORK\PACKETHANDLERS.CS
+        public static void SpecialSetLastTargetCliloc(uint target)
+        {
+            if (ProfileManager.CurrentProfile.SpecialSetLastTargetCliloc)
+            {
+                TargetManager.LastTargetInfo.Serial = target;
+                TargetManager.LastTargetInfo.SetEntity(target);
+            }
+        }
+        // ## BEGIN - END ## // MISC
 
     }
 }
