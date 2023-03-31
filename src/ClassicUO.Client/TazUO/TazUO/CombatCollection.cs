@@ -1316,6 +1316,13 @@ namespace ClassicUO.TazUO.TazUO
                     }
                 }
             }
+            // ## BEGIN - END ## // ONCASTINGGUMP
+            if (ProfileManager.CurrentProfile.OnCastingGump)
+            {
+                if (!GameActions.iscasting)
+                    World.Player.OnCasting.Start((uint)GameActions.LastSpellIndexCursor);
+            }
+            // ## BEGIN - END ## // ONCASTINGGUMP
         }
         // ## BEGIN - END ## // VISUAL HELPERS
         // ## BEGIN - END ## // CURSOR
