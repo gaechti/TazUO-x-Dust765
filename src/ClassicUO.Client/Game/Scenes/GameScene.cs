@@ -152,6 +152,10 @@ namespace ClassicUO.Game.Scenes
 
             Macros.Load();
 
+            // ## BEGIN - END ## // NAMEOVERHEAD
+            NameOverHeadManager.Load();
+            // ## BEGIN - END ## // NAMEOVERHEAD
+
             _animatedStaticsManager = new AnimatedStaticsManager();
             _animatedStaticsManager.Initialize();
             InfoBars = new InfoBarManager();
@@ -350,6 +354,12 @@ namespace ClassicUO.Game.Scenes
 
             Macros.Save();
             InfoBars.Save();
+
+            // ## BEGIN - END ## // NAMEOVERHEAD
+            NameOverHeadManager.Save();
+            // ## BEGIN - END ## // NAMEOVERHEAD
+
+
             ProfileManager.UnLoadProfile();
 
             StaticFilters.CleanCaveTextures();
@@ -611,7 +621,13 @@ namespace ClassicUO.Game.Scenes
 
             GetViewPort();
 
-            var useObjectHandles = NameOverHeadManager.IsToggled || Keyboard.Ctrl && Keyboard.Shift;
+            // ## BEGIN - END ## // NAMEOVERHEAD
+            //var useObjectHandles = NameOverHeadManager.IsToggled || Keyboard.Ctrl && Keyboard.Shift;
+            // ## BEGIN - END ## // NAMEOVERHEAD
+            var useObjectHandles = NameOverHeadManager.IsShowing;
+            // ## BEGIN - END ## // NAMEOVERHEAD
+
+            /*
             if (useObjectHandles != _useObjectHandles)
             {
                 _useObjectHandles = useObjectHandles;
@@ -624,6 +640,26 @@ namespace ClassicUO.Game.Scenes
                     NameOverHeadManager.Close();
                 }
             }
+            */
+            // ## BEGIN - END ## // NAMEOVERHEAD
+
+            var useObjectHandlesPinned = NameOverHeadManager.IsPinnedToggled;
+            if (useObjectHandles != _useObjectHandles)
+            {
+                _useObjectHandles = useObjectHandles;
+                if (_useObjectHandles)
+                {
+                    NameOverHeadManager.Open();
+                }
+                else
+                {
+                    if (!useObjectHandlesPinned)
+                    {
+                        NameOverHeadManager.Close();
+                    }
+                }
+            }
+            // ## BEGIN - END ## // NAMEOVERHEAD
 
             _rectanglePlayer.X = (int) (World.Player.RealScreenPosition.X - World.Player.FrameInfo.X + 22 + World.Player.Offset.X);
             _rectanglePlayer.Y = (int) (World.Player.RealScreenPosition.Y - World.Player.FrameInfo.Y + 22 + (World.Player.Offset.Y - World.Player.Offset.Z));

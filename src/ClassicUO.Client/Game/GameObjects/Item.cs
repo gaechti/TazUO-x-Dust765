@@ -45,6 +45,9 @@ using ClassicUO.Utility.Platforms;
 using Microsoft.Xna.Framework;
 using ClassicUO.Configuration;
 using ClassicUO.TazUO.TazUO;
+// ## BEGIN - END ## // NAMEOVERHEAD
+using MathHelper = ClassicUO.Utility.MathHelper;
+// ## BEGIN - END ## // NAMEOVERHEAD
 
 namespace ClassicUO.Game.GameObjects
 {
@@ -188,6 +191,10 @@ namespace ClassicUO.Game.GameObjects
         public int MultiDistanceBonus { get; private set; }
 
         public bool IsCorpse => /*MathHelper.InRange(Graphic, 0x0ECA, 0x0ED2) ||*/ Graphic == 0x2006;
+
+        // ## BEGIN - END ## // NAMEOVERHEAD
+        public bool IsHumanCorpse => IsCorpse && MathHelper.InRange(Amount, 0x0190, 0x0193) || MathHelper.InRange(Amount, 0x00B7, 0x00BA) || MathHelper.InRange(Amount, 0x025D, 0x0260) || MathHelper.InRange(Amount, 0x029A, 0x029B) || MathHelper.InRange(Amount, 0x02B6, 0x02B7) || Amount == 0x03DB || Amount == 0x03DF || Amount == 0x03E2 || Amount == 0x02E8 || Amount == 0x02E9;
+        // ## BEGIN - END ## // NAMEOVERHEAD
 
         public bool OnGround => !SerialHelper.IsValid(Container);
 
