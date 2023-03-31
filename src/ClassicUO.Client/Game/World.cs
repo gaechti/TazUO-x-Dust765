@@ -34,6 +34,9 @@ using System.Collections.Generic;
 using System.Linq;
 using ClassicUO.IO.Audio;
 using ClassicUO.Game.Data;
+// ## BEGIN - END ## // MACROS
+using ClassicUO.TazUO.TazUO;
+// ## BEGIN - END ## // MACROS
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.Map;
@@ -92,6 +95,11 @@ namespace ClassicUO.Game
         public static WorldTextManager WorldTextManager { get; } = new WorldTextManager();
 
         public static JournalManager Journal { get; } = new JournalManager();
+
+        // ## BEGIN - END ## // MACROS
+        public static AnimationTriggers AnimationTriggers { get; } = new AnimationTriggers();
+        // ## BEGIN - END ## // MACROS
+
 
         public static CoolDownBarManager CoolDownBarManager { get; } = new CoolDownBarManager();
 

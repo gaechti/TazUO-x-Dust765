@@ -380,6 +380,14 @@ namespace ClassicUO.Configuration
         public bool IgnoreCoTEnabled { get; set; } = false;
         public bool ShowDeathOnWorldmap { get; set; } = false;
         // ## BEGIN - END ## // MISC2
+        // ## BEGIN - END ## // MACROS
+        public int LastTargetRange { get; set; }
+        public bool Journal2DarkMode { get; set; }
+        public bool ShowJournal2Client { get; set; } = true;
+        public bool ShowJournal2Objects { get; set; } = true;
+        public bool ShowJournal2System { get; set; } = true;
+        public bool ShowJournal2GuildAlly { get; set; } = true;
+        // ## BEGIN - END ## // MACROS
 
         // ## BEGIN - END ## // VISUALRESPONSEMANAGER
         public bool VisualResponseManager { get; set; } = false;
