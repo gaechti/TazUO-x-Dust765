@@ -33,6 +33,9 @@
 using ClassicUO.Assets;
 using ClassicUO.Configuration;
 using ClassicUO.Game;
+// ## BEGIN - END ## // MODERNCOOLDOWNBAR
+using ClassicUO.TazUO.TazUO;
+// ## BEGIN - END ## // MODERNCOOLDOWNBAR
 using ClassicUO.Game.Data;
 using ClassicUO.IO;
 using ClassicUO.Network;
@@ -186,6 +189,9 @@ namespace ClassicUO
 
             BuffTable.Load();
             ChairTable.Load();
+            // ## BEGIN - END ## // MODERNCOOLDOWNBAR
+            BuffFilters.Load();
+            // ## BEGIN - END ## // MODERNCOOLDOWNBA
 
             Log.Trace("Network calibration...");
             //ATTENTION: you will need to enable ALSO ultimalive server-side, or this code will have absolutely no effect!

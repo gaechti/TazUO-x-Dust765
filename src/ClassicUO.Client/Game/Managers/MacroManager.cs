@@ -54,6 +54,7 @@ using ClassicUO.Utility;
 using ClassicUO.Utility.Logging;
 using SDL2;
 using ClassicUO.TazUO.Macros;
+using ClassicUO.TazUO.TazUO;
 
 namespace ClassicUO.Game.Managers
 {
@@ -1210,8 +1211,9 @@ namespace ClassicUO.Game.Managers
 
                 case MacroType.CloseGump:
 
-                    UIManager.Gumps.Where(s => !(s is TopBarGump) && !(s is BuffGump) && !(s is ImprovedBuffGump) && !(s is WorldViewportGump)).ToList().ForEach(s => s.Dispose());
 
+                    UIManager.Gumps.Where(s => !(s is TopBarGump) && !(s is BuffGump) && !(s is ImprovedBuffGump) && !(s is WorldViewportGump) && !(s is UOClassicCombatLTBar) && !(s is BandageGump) && !(s is UOClassicCombatLines) && !(s is UOClassicCombatAL) && !(s is UOClassicCombatBuffbar) && !(s is UOClassicCombatSelf) && !(s is ECBuffGump) && !(s is ECDebuffGump) && !(s is ECStateGump) && !(s is ModernCooldownBar)).ToList().ForEach(s => s.Dispose());
+   
                     break;
 
                 case MacroType.AlwaysRun:
@@ -2312,7 +2314,65 @@ namespace ClassicUO.Game.Managers
                     CommandManager.Execute("lobby", lobbydrop);
 
                     break;
-                    // ## BEGIN - END ## // LOBBY
+                // ## BEGIN - END ## // LOBBY
+
+                // ## BEGIN - END ## // MODERNCOOLDOWNBAR
+                case MacroType.ToggleECBuffGump:
+                    ECBuffGump ecbuffs = UIManager.GetGump<ECBuffGump>();
+
+                    if (ecbuffs != null)
+                    {
+                        ecbuffs.Dispose();
+                    }
+                    else
+                    {
+                        UIManager.Add(new ECBuffGump(100, 100));
+                    }
+
+                    break;
+
+                case MacroType.ToggleECDebuffGump:
+                    ECDebuffGump ecdebuffs = UIManager.GetGump<ECDebuffGump>();
+
+                    if (ecdebuffs != null)
+                    {
+                        ecdebuffs.Dispose();
+                    }
+                    else
+                    {
+                        UIManager.Add(new ECDebuffGump(100, 100));
+                    }
+
+                    break;
+
+                case MacroType.ToggleECStateGump:
+                    ECStateGump ecstates = UIManager.GetGump<ECStateGump>();
+
+                    if (ecstates != null)
+                    {
+                        ecstates.Dispose();
+                    }
+                    else
+                    {
+                        UIManager.Add(new ECStateGump(100, 100));
+                    }
+
+                    break;
+
+                case MacroType.ToggleModernCooldownBar:
+                    ModernCooldownBar cooldowns = UIManager.GetGump<ModernCooldownBar>();
+
+                    if (cooldowns != null)
+                    {
+                        cooldowns.Dispose();
+                    }
+                    else
+                    {
+                        UIManager.Add(new ModernCooldownBar(100, 100));
+                    }
+
+                    break;
+                    // ## BEGIN - END ## // MODERNCOOLDOWNBAR
             }
 
 
@@ -2918,12 +2978,12 @@ namespace ClassicUO.Game.Managers
         CloseInactiveHealthBars,
         CloseCorpses,
         UseObject,
-        // ## BEGIN - END ## // BASICSETUP
-        notimplemented31,
-        notimplemented32,
-        notimplemented33,
-        notimplemented34,
-        // ## BEGIN - END ## // BASICSETUP
+        // ## BEGIN - END ## // MODERNCOOLDOWNBAR
+        ToggleECBuffGump,
+        ToggleECDebuffGump,
+        ToggleECStateGump,
+        ToggleModernCooldownBar,
+        // ## BEGIN - END ## // MODERNCOOLDOWNBAR
         LookAtMouse
     }
 

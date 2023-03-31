@@ -39,6 +39,7 @@ using ClassicUO.Game;
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.UI.Gumps;
+using ClassicUO.TazUO.TazUO;
 using ClassicUO.Utility.Logging;
 using Microsoft.Xna.Framework;
 using TinyJson;
@@ -525,7 +526,9 @@ namespace ClassicUO.Configuration
         // ## BEGIN - END ## // STATUSGUMP
         public bool UseRazorEnhStatusGump { get; set; } = false;
         // ## BEGIN - END ## // STATUSGUMP
-
+        // ## BEGIN - END ## // MODERNCOOLDOWNBAR
+        public bool ModernCooldwonBar_locked { get; set; } = false;
+        // ## BEGIN - END ## // MODERNCOOLDOWNBAR
 
         // ## BEGIN - END ## // VISUALRESPONSEMANAGER
         public bool VisualResponseManager { get; set; } = false;
@@ -810,6 +813,28 @@ namespace ClassicUO.Configuration
                                         gump = new BuffGump(100, 100);
 
                                     break;
+
+                                // ## BEGIN - END ## // MODERNCOOLDOWNBAR
+                                case GumpType.ECBuffGump:
+                                    gump = new ECBuffGump();
+
+                                    break;
+
+                                case GumpType.ECDebuffGump:
+                                    gump = new ECDebuffGump();
+
+                                    break;
+
+                                case GumpType.ECStateGump:
+                                    gump = new ECStateGump();
+
+                                    break;
+
+                                case GumpType.ModernCooldownBar:
+                                    gump = new ModernCooldownBar();
+
+                                    break;
+                                // ## BEGIN - END ## // MODERNCOOLDOWNBAR
 
                                 case GumpType.Container:
                                     gump = new ContainerGump();
