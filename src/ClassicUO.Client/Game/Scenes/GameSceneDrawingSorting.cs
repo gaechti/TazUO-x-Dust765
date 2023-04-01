@@ -36,7 +36,7 @@ using System.Runtime.InteropServices;
 using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
 // ## BEGIN - END ## // ART / HUE CHANGES
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.Dust765;
 // ## BEGIN - END ## // ART / HUE CHANGES
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;

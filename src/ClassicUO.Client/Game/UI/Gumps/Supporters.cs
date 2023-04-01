@@ -16,10 +16,7 @@ namespace ClassicUO.Game.UI.Gumps
 
 
         private static readonly string[] SUPPORTERS = {
-            "TazmanianTad - Developer",
-            "Doskan - Random coffee bringer",
-            "Auburok - Don't leave Brit Bank without TazUO",
-            "IDiivil - Happily Organized Now"
+            "Gaetchi - King",
         };
         private AlphaBlendControl _background;
 

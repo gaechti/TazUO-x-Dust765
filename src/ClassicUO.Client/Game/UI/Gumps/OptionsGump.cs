@@ -36,8 +36,8 @@ using System.IO;
 using System.Linq;
 using ClassicUO.Configuration;
 // ## BEGIN - END ## // UI/GUMPS
-using ClassicUO.TazUO.TazUO;
-using ClassicUO.TazUO.External;
+using ClassicUO.Dust765.Dust765;
+using ClassicUO.Dust765.External;
 // ## BEGIN - END ## // UI/GUMPS
 using ClassicUO.Game.Data;
 using ClassicUO.Game.GameObjects;
@@ -1103,35 +1103,6 @@ namespace ClassicUO.Game.UI.Gumps
 
             section2.PopIndent();
             section2.PopIndent();
-
-            section2.Add(AddLabel(null, "Hidden Body Opacity", startX, startY));
-
-            section2.AddRight
-            (
-                _hiddenBodyAlpha = AddHSlider(
-                    null,
-                    0,
-                    100,
-                    _currentProfile.HiddenBodyAlpha,
-                    startX,
-                    startY,
-                    200
-                ),
-                2
-            );
-
-            section2.Add
-            (
-                _hiddenBodyHue = AddColorBox(
-                    null,
-                    startX,
-                    startY,
-                    _currentProfile.HiddenBodyHue,
-                    ""
-                    )
-            );
-            section2.AddRight(AddLabel(null, "Hidden Body Hue", startX, startY));
-
 
             SettingsSection section3 = AddSettingsSection(box, "Gumps & Context");
             section3.Y = section2.Bounds.Bottom + 40;
@@ -4823,6 +4794,8 @@ namespace ClassicUO.Game.UI.Gumps
         private void BuildTazUO()
         {
             const int PAGE = 19;
+
+
             ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 420, true);
 
             int startX = 5;
@@ -4835,82 +4808,77 @@ namespace ClassicUO.Game.UI.Gumps
             // ## BEGIN - END ## // UI/GUMPS
             SettingsSection section = AddSettingsSection(box, "-----TAZ UO MODS-----");
 
-            {
-
-                section.AddRight
-                (
-                    _enableImprovedBuffGump = AddCheckBox(
-                      null,
-                      "Enable improved buff gump",
-                      _currentProfile.UseImprovedBuffBar,
-                      startX, startY
-                      ),
-                     2
-                );
-                section.PushIndent();
-                startY += _enableImprovedBuffGump.Height + 2;
-                section.Add
-                (
-                      _improvedBuffBarHue = AddColorBox(
+            section.AddRight
+            (
+                _enableImprovedBuffGump = AddCheckBox(
                     null,
-                    startX, startY,
-                    _currentProfile.ImprovedBuffBarHue,
-                    "Buff Bar Hue"
-                    )
-                );
-
-                section.AddRight(AddLabel(null, "Buff Bar Hue", startX, startY));
-                startY += _improvedBuffBarHue.Height + 2;
-                section.PopIndent();
-            } //Journal opac and hue
-
-
-            {
-                section.Add(AddLabel(null, "Journal Opacity", startX, startY));
-
-                section.AddRight
-                (
-                    _journalOpacity = AddHSlider(
-                        null,
-                        0,
-                        100,
-                        _currentProfile.JournalOpacity,
-                        startX,
-                        startY,
-                        200
+                    "Enable improved buff gump",
+                    _currentProfile.UseImprovedBuffBar,
+                    startX, startY
                     ),
                     2
-                );
-                section.PushIndent();
-                startY += _journalOpacity.Height + 2;
-                section.Add
-                (
-                    _journalBackgroundColor = AddColorBox(
-                        null,
-                        startX,
-                        startY,
-                        _currentProfile.AltJournalBackgroundHue,
-                        ""
-                        )
-                );
+            );
+            section.PushIndent();
+            startY += _enableImprovedBuffGump.Height + 2;
+            section.Add
+            (
+                    _improvedBuffBarHue = AddColorBox(
+                null,
+                startX, startY,
+                _currentProfile.ImprovedBuffBarHue,
+                "Buff Bar Hue"
+                )
+            );
 
-                section.AddRight(AddLabel(null, "Journal Background", startX, startY));
-                startY += _journalBackgroundColor.Height + 2;
-                section.PopIndent();
-            } //Journal opac and hue
+            section.AddRight(AddLabel(null, "Buff Bar Hue", startX, startY));
+            startY += _improvedBuffBarHue.Height + 2;
+            section.PopIndent();
 
-            {
-                section.Add(_disableSystemChat = AddCheckBox(
-                        null,
-                        "",
-                        _currentProfile.DisableSystemChat,
-                        0, 0
-                    ));
-                section.AddRight(AddLabel(null, "Disable system chat", 0, 0));
-                startY += _disableSystemChat.Height + 2;
-            } //Disable system chat
+            section.Add(AddLabel(null, "Journal Opacity", startX, startY));
 
-            {
+            section.AddRight
+            (
+                _journalOpacity = AddHSlider(
+                    null,
+                    0,
+                    100,
+                    _currentProfile.JournalOpacity,
+                    startX,
+                    startY,
+                    200
+                ),
+                2
+            );
+            section.PushIndent();
+            startY += _journalOpacity.Height + 2;
+            section.Add
+            (
+                _journalBackgroundColor = AddColorBox(
+                    null,
+                    startX,
+                    startY,
+                    _currentProfile.AltJournalBackgroundHue,
+                    ""
+                    )
+            );
+
+            section.AddRight(AddLabel(null, "Journal Background", startX, startY));
+            startY += _journalBackgroundColor.Height + 2;
+            section.PopIndent();
+            
+
+           
+            section.Add(_disableSystemChat = AddCheckBox(
+                    null,
+                    "",
+                    _currentProfile.DisableSystemChat,
+                    0, 0
+                ));
+            section.AddRight(AddLabel(null, "Disable system chat", 0, 0));
+            startY += _disableSystemChat.Height + 2;
+            
+
+            
                 section.Add(
                     _namePlateHealthBar = AddCheckBox(null, "", _currentProfile.NamePlateHealthBar, startX, startY)
                 );
@@ -4933,9 +4901,10 @@ namespace ClassicUO.Game.UI.Gumps
                 section.AddRight(new Label("Hide nameplates above 100% hp.", true, HUE_FONT, font: FONT));
 
                 section.PopIndent();
-            } //Name plate health bar
+           
 
-            {
+            
+                section.PushIndent();
                 section.Add(AddLabel(null, "Name plate background opacity", 0, 0));
                 section.AddRight(_namePlateOpacity = AddHSlider(
                         null,
@@ -4945,13 +4914,42 @@ namespace ClassicUO.Game.UI.Gumps
                         200
                     ));
                 startY += _namePlateOpacity.Height + 2;
-            } //Name plate background opacity
+                section.PopIndent();
+            
+
+            section.AddRight
+           (
+               _hiddenBodyAlpha = AddHSlider(
+                   null,
+                   0,
+                   100,
+                   _currentProfile.HiddenBodyAlpha,
+                   startX,
+                   startY,
+                   200
+               ),
+               2
+           );
+            startY += _hiddenBodyAlpha.Height + 2;
+            section.Add(AddLabel(null, "Hidden Body Opacity", startX, startY));
+            section.Add
+            (
+                _hiddenBodyHue = AddColorBox(
+                    null,
+                    startX,
+                    startY,
+                    _currentProfile.HiddenBodyHue,
+                    ""
+                    )
+            );
+            section.AddRight(AddLabel(null, "Hidden Body Hue", startX, startY));
+            startY += _hiddenBodyAlpha.Height + 2;
 
             SettingsSection gridSection = new SettingsSection("Grid Containers", rightArea.Width);
             gridSection.X = startX + 20;
             gridSection.Y = startY + 20;
 
-            {
+            
                 gridSection.Add(_useGridLayoutContainerGumps = AddCheckBox(
                     null,
                     "Use grid containers",
@@ -4960,9 +4958,9 @@ namespace ClassicUO.Game.UI.Gumps
                     0
                 ));
                 startY += _useGridLayoutContainerGumps.Height + 2;
-            } //Use grid containers
+            
 
-            {
+            
                 gridSection.Add(AddLabel(null, "Grid container scale", 0, 0));
 
                 gridSection.AddRight(_gridContainerScale = AddHSlider(
@@ -4973,9 +4971,9 @@ namespace ClassicUO.Game.UI.Gumps
                         200
                     ));
                 startY += _gridContainerScale.Height + 2;
-            } //Grid container scale
+            
 
-            {
+            
                 gridSection.PushIndent();
 
                 gridSection.Add(_gridContainerItemScale = AddCheckBox(
@@ -4989,9 +4987,9 @@ namespace ClassicUO.Game.UI.Gumps
                 gridSection.AddRight(AddLabel(null, "Also scale items", 0, 0));
 
                 gridSection.PopIndent();
-            } //Grid container item scales
+            
 
-            {
+            
                 gridSection.Add(AddLabel(null, "Border opacity", 0, 0));
                 gridSection.AddRight
                     (
@@ -5007,9 +5005,9 @@ namespace ClassicUO.Game.UI.Gumps
                         )
                     );
                 startY += _gridBorderOpacity.Height + 2;
-            } //Grid border opacity
+            
 
-            {
+            
                 gridSection.PushIndent();
                 gridSection.Add
                     (
@@ -5018,9 +5016,8 @@ namespace ClassicUO.Game.UI.Gumps
                 gridSection.AddRight(AddLabel(null, "Border hue", 0, 0));
                 startY += _gridBorderHue.Height + 2;
                 gridSection.PopIndent();
-            } //Grid border hue
-
-            {
+            
+            
                 gridSection.Add(AddLabel(null, "Background opacity", 0, 0));
                 gridSection.AddRight(_containerOpacity = AddHSlider
                 (
@@ -5033,24 +5030,24 @@ namespace ClassicUO.Game.UI.Gumps
                     200
                 ));
                 startY += _containerOpacity.Height + 2;
-            } //Grid container opacity
+            
 
-            {
+            
                 gridSection.PushIndent();
                 gridSection.Add(_altGridContainerBackgroundHue = new ModernColorPicker.HueDisplay(_currentProfile.AltGridContainerBackgroundHue, null, true));
                 gridSection.AddRight(AddLabel(null, "Background hue", 0, 0));
                 startY += _altGridContainerBackgroundHue.Height + 2;
                 gridSection.PopIndent();
-            } //Grid container background hue
+            
 
-            {
+            
                 gridSection.PushIndent();
                 gridSection.Add(_gridOverrideWithContainerHue = AddCheckBox(null, "Override hue with the container's hue", _currentProfile.Grid_UseContainerHue, 0, 0));
                 startY += _gridOverrideWithContainerHue.Height + 2;
                 gridSection.PopIndent();
-            } //Override grid hue with container hue
+            
 
-            {
+            
                 gridSection.Add(
                         AddLabel(null, "Search Style", 0, 0)
                     );
@@ -5070,9 +5067,9 @@ namespace ClassicUO.Game.UI.Gumps
                     );
 
                 startY += _gridContainerSearchAlternative.Height + 2;
-            } //Grid container search mode
+            
 
-            {
+            
                 gridSection.Add(_gridContainerPreview = AddCheckBox(
                         null,
                         "Enable container preview",
@@ -5082,9 +5079,9 @@ namespace ClassicUO.Game.UI.Gumps
                     ));
                 startY += _gridContainerPreview.Height + 2;
                 _gridContainerPreview.SetTooltip("This only works on containers that you have opened, otherwise the client does not have that information yet.");
-            } //Grid preview
+            
 
-            {
+            
                 gridSection.Add(_gridContainerAnchorable = AddCheckBox(
                         null, "Make anchorable",
                         _currentProfile.EnableGridContainerAnchor,
@@ -5092,9 +5089,9 @@ namespace ClassicUO.Game.UI.Gumps
                     ));
                 startY += _gridContainerAnchorable.Height + 2;
                 _gridContainerAnchorable.SetTooltip("This will allow grid containers to be anchored to other containers/world map/journal");
-            } //Grid anchors
+            
 
-            {
+            
                 gridSection.Add(AddLabel(null, "Container Style", 0, 0));
 
                 gridSection.AddRight(_gridBorderStyle = AddCombobox(
@@ -5106,9 +5103,9 @@ namespace ClassicUO.Game.UI.Gumps
                     ));
 
                 startY += _gridBorderStyle.Height + 2;
-            } //Grid border style
+            
 
-            {
+            
                 gridSection.Add(AddLabel(null, "Default grid rows x columns", 0, 0));
                 gridSection.AddRight(_gridDefaultRows = AddInputField(null, 0, 0, 25, TEXTBOX_HEIGHT, numbersOnly: true));
                 startY += _gridDefaultRows.Height + 2;
@@ -5117,7 +5114,7 @@ namespace ClassicUO.Game.UI.Gumps
                 startY += _gridDefaultColumns.Height + 2;
                 _gridDefaultColumns.SetText(_currentProfile.Grid_DefaultColumns.ToString());
                 startY += _gridDefaultColumns.Height + 2;
-            } //Grid default rows and columns
+            
 
 
             SettingsSection _damageHues = new SettingsSection("Damage number hues", rightArea.Width);

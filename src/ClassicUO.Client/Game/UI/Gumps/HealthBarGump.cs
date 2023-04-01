@@ -36,7 +36,7 @@ using System.Xml;
 using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
 // ## BEGIN - END ## // OVERHEAD / UNDERCHAR
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.Dust765;
 // ## BEGIN - END ## // OVERHEAD / UNDERCHAR
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;
@@ -49,7 +49,7 @@ using ClassicUO.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDL2;
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.Dust765;
 
 namespace ClassicUO.Game.UI.Gumps
 {

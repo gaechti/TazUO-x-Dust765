@@ -34,7 +34,7 @@ using ClassicUO.Assets;
 using ClassicUO.Configuration;
 using ClassicUO.Game;
 // ## BEGIN - END ## // MODERNCOOLDOWNBAR
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.Dust765;
 // ## BEGIN - END ## // MODERNCOOLDOWNBAR
 using ClassicUO.Game.Data;
 using ClassicUO.IO;

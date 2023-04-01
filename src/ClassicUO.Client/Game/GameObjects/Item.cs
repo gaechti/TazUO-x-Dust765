@@ -44,7 +44,7 @@ using ClassicUO.Utility.Logging;
 using ClassicUO.Utility.Platforms;
 using Microsoft.Xna.Framework;
 using ClassicUO.Configuration;
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.Dust765;
 // ## BEGIN - END ## // NAMEOVERHEAD
 using MathHelper = ClassicUO.Utility.MathHelper;
 // ## BEGIN - END ## // NAMEOVERHEAD

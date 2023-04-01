@@ -34,7 +34,7 @@ using System;
 using System.Collections.Generic;
 using ClassicUO.Configuration;
 // ## BEGIN - END ## // VISUAL HELPERS
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.Dust765;
 // ## BEGIN - END ## // VISUAL HELPERS
 using ClassicUO.Game.Data;
 using ClassicUO.Game.Managers;

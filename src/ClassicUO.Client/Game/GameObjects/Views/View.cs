@@ -35,7 +35,7 @@ using System.Runtime.CompilerServices;
 using ClassicUO.Configuration;
 // ## BEGIN - END ## // MISC2
 using ClassicUO.Game.Data;
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.Dust765;
 // ## BEGIN - END ## // MISC2
 using ClassicUO.IO;
 using ClassicUO.Assets;

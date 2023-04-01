@@ -35,7 +35,7 @@ using ClassicUO.Configuration;
 using ClassicUO.Game;
 using ClassicUO.Game.Data;
 // ## BEGIN - END ## // AUTOMATIONS
-using ClassicUO.TazUO.Autos;
+using ClassicUO.Dust765.Autos;
 // ## BEGIN - END ## // AUTOMATIONS
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;
@@ -44,7 +44,7 @@ using ClassicUO.Game.UI.Controls;
 using ClassicUO.Game.UI.Gumps;
 using ClassicUO.IO;
 using ClassicUO.Resources;
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.Dust765;
 using ClassicUO.Utility;
 using ClassicUO.Utility.Logging;
 using ClassicUO.Utility.Platforms;

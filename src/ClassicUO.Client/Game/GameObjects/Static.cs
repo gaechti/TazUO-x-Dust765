@@ -32,7 +32,7 @@
 
 using ClassicUO.Game.Data;
 // ## BEGIN - END ## // ART / HUE CHANGES
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.Dust765;
 using ClassicUO.Configuration;
 // ## BEGIN - END ## // ART / HUE CHANGES
 using ClassicUO.Game.Managers;

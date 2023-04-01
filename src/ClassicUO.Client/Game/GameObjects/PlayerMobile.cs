@@ -35,7 +35,7 @@ using System.Linq;
 using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
 // ## BEGIN - END ## // UI/GUMPS
-using ClassicUO.TazUO.External;
+using ClassicUO.Dust765.External;
 // ## BEGIN - END ## // UI/GUMPS
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.UI.Controls;

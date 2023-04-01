@@ -36,7 +36,7 @@ using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
 // ## BEGIN - END ## // VISUAL HELPERS
 // ## BEGIN - END ## // CURSOR
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.Dust765;
 // ## BEGIN - END ## // CURSOR
 // ## BEGIN - END ## // VISUAL HELPERS
 using ClassicUO.Game.GameObjects;
@@ -50,7 +50,7 @@ using ClassicUO.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDL2;
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.Dust765;
 
 namespace ClassicUO.Game
 {

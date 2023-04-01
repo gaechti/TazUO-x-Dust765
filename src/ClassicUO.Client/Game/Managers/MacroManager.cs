@@ -39,10 +39,10 @@ using System.Xml;
 using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
 // ## BEGIN - END ## // MACROS
-using ClassicUO.TazUO.External;
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.External;
+using ClassicUO.Dust765.Dust765;
 // ## BEGIN - END ## // MACROS
-using ClassicUO.TazUO.Managers;
+using ClassicUO.Dust765.Managers;
 // ## BEGIN - END ## // MACROS
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Scenes;
@@ -53,8 +53,8 @@ using ClassicUO.Resources;
 using ClassicUO.Utility;
 using ClassicUO.Utility.Logging;
 using SDL2;
-using ClassicUO.TazUO.Macros;
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.Macros;
+using ClassicUO.Dust765.Dust765;
 
 namespace ClassicUO.Game.Managers
 {

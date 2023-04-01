@@ -33,7 +33,7 @@
 using System.Linq;
 using ClassicUO.Configuration;
 // ## BEGIN - END ## // AUTOLOOT
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.Dust765;
 // ## BEGIN - END ## // AUTOLOOT
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;

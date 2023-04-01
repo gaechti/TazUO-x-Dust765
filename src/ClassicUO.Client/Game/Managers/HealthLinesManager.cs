@@ -33,7 +33,7 @@
 using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
 // ## BEGIN - END ## // OVERHEAD / UNDERCHAR
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.Dust765;
 using Microsoft.Xna.Framework.Graphics;
 // ## BEGIN - END ## // OVERHEAD / UNDERCHAR
 using ClassicUO.Game.GameObjects;

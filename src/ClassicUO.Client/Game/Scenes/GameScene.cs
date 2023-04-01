@@ -36,8 +36,8 @@ using System.Linq;
 using System.Net.Sockets;
 using ClassicUO.Configuration;
 // ## BEGIN - END ## // UI/GUMPS
-using ClassicUO.TazUO.External;
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.External;
+using ClassicUO.Dust765.Dust765;
 // ## BEGIN - END ## // UI/GUMPS
 using ClassicUO.Game.Data;
 using ClassicUO.Game.GameObjects;

@@ -35,7 +35,7 @@ using System.Linq;
 using ClassicUO.IO.Audio;
 using ClassicUO.Game.Data;
 // ## BEGIN - END ## // MACROS
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.Dust765;
 // ## BEGIN - END ## // MACROS
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;

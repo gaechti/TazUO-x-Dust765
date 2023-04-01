@@ -32,7 +32,7 @@
 
 using ClassicUO.Configuration;
 // ## BEGIN - END ## // VISUAL HELPERS
-using ClassicUO.TazUO.TazUO;
+using ClassicUO.Dust765.Dust765;
 // ## BEGIN - END ## // VISUAL HELPERS
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.Scenes;
