@@ -63,7 +63,7 @@ namespace ClassicUO.Game.UI.Gumps
         private const byte FONT = 0xFF;
         private const ushort HUE_FONT = 0xFFFF;
         private const int WIDTH = 700;
-        private const int HEIGHT = 600;
+        private const int HEIGHT = 620;
         private const int TEXTBOX_HEIGHT = 25;
 
         private static Texture2D _logoTexture2D;
@@ -556,7 +556,7 @@ namespace ClassicUO.Game.UI.Gumps
                 new Line
                 (
                     160,
-                    405 + 35 + 1,
+                    535 + 35 + 1,
                     WIDTH - 160,
                     1,
                     Color.Gray.PackedValue
@@ -568,7 +568,7 @@ namespace ClassicUO.Game.UI.Gumps
                 new Button((int)Buttons.Cancel, 0x00F3, 0x00F1, 0x00F2)
                 {
                     X = 154 + offsetX,
-                    Y = 405 + offsetY,
+                    Y = 525 + offsetY,
                     ButtonAction = ButtonAction.Activate
                 }
             );
@@ -578,7 +578,7 @@ namespace ClassicUO.Game.UI.Gumps
                 new Button((int)Buttons.Apply, 0x00EF, 0x00F0, 0x00EE)
                 {
                     X = 248 + offsetX,
-                    Y = 405 + offsetY,
+                    Y = 525 + offsetY,
                     ButtonAction = ButtonAction.Activate
                 }
             );
@@ -588,7 +588,7 @@ namespace ClassicUO.Game.UI.Gumps
                 new Button((int)Buttons.Default, 0x00F6, 0x00F4, 0x00F5)
                 {
                     X = 346 + offsetX,
-                    Y = 405 + offsetY,
+                    Y = 525 + offsetY,
                     ButtonAction = ButtonAction.Activate
                 }
             );
@@ -598,7 +598,7 @@ namespace ClassicUO.Game.UI.Gumps
                 new Button((int)Buttons.Ok, 0x00F9, 0x00F8, 0x00F7)
                 {
                     X = 443 + offsetX,
-                    Y = 405 + offsetY,
+                    Y = 525 + offsetY,
                     ButtonAction = ButtonAction.Activate
                 }
             );
@@ -659,7 +659,7 @@ namespace ClassicUO.Game.UI.Gumps
                 190,
                 20,
                 WIDTH - 210,
-                420,
+                550,
                 true
             );
 
@@ -1599,7 +1599,7 @@ namespace ClassicUO.Game.UI.Gumps
                 190,
                 20,
                 WIDTH - 210,
-                420,
+                550,
                 true
             );
 
@@ -1719,7 +1719,7 @@ namespace ClassicUO.Game.UI.Gumps
                 190,
                 20,
                 WIDTH - 210,
-                420,
+                550,
                 true
             );
 
@@ -2407,7 +2407,7 @@ namespace ClassicUO.Game.UI.Gumps
                 190,
                 20,
                 WIDTH - 210,
-                420,
+                550,
                 true
             );
 
@@ -2515,7 +2515,7 @@ namespace ClassicUO.Game.UI.Gumps
                 190,
                 20,
                 WIDTH - 210,
-                420,
+                550,
                 true
             );
 
@@ -2584,7 +2584,7 @@ namespace ClassicUO.Game.UI.Gumps
                 190,
                 20,
                 WIDTH - 210,
-                420,
+                550,
                 true
             );
 
@@ -2841,7 +2841,7 @@ namespace ClassicUO.Game.UI.Gumps
                 190,
                 20,
                 WIDTH - 210,
-                420,
+                550,
                 true
             );
 
@@ -3077,7 +3077,7 @@ namespace ClassicUO.Game.UI.Gumps
                 190,
                 20,
                 WIDTH - 210,
-                420,
+                550,
                 true
             );
 
@@ -3243,7 +3243,7 @@ namespace ClassicUO.Game.UI.Gumps
                 190,
                 20,
                 WIDTH - 210,
-                420,
+                550,
                 true
             );
 
@@ -3318,7 +3318,7 @@ namespace ClassicUO.Game.UI.Gumps
                 190,
                 20,
                 WIDTH - 210,
-                420,
+                550,
                 true
             );
 
@@ -3448,7 +3448,7 @@ namespace ClassicUO.Game.UI.Gumps
                 190,
                 20,
                 WIDTH - 210,
-                420,
+                550,
                 true
             );
 
@@ -3867,7 +3867,7 @@ namespace ClassicUO.Game.UI.Gumps
         {
             const int PAGE = 14;
 
-            ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 420, true);
+            ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 550, true);
 
             int startX = 5;
             int startY = 5;
@@ -3926,7 +3926,7 @@ namespace ClassicUO.Game.UI.Gumps
         private void BuildDust()
         {
             const int PAGE = 16;
-            ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 420, true);
+            ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 550, true);
 
             int startX = 5;
             int startY = 5;
@@ -4393,7 +4393,7 @@ namespace ClassicUO.Game.UI.Gumps
         private void Build765()
         {
             const int PAGE = 17;
-            ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 420, true);
+            ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 550, true);
 
             int startX = 5;
             int startY = 5;
@@ -4796,7 +4796,7 @@ namespace ClassicUO.Game.UI.Gumps
             const int PAGE = 19;
 
 
-            ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 420, true);
+            ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 550, true);
 
             int startX = 5;
             int startY = 5;
@@ -4901,11 +4901,11 @@ namespace ClassicUO.Game.UI.Gumps
                 section.AddRight(new Label("Hide nameplates above 100% hp.", true, HUE_FONT, font: FONT));
 
                 section.PopIndent();
-           
 
-            
-                section.PushIndent();
-                section.Add(AddLabel(null, "Name plate background opacity", 0, 0));
+
+
+            section.PushIndent();
+            section.Add(AddLabel(null, "Name plate background opacity", 0, 0));
                 section.AddRight(_namePlateOpacity = AddHSlider(
                         null,
                         0, 100,
@@ -4913,25 +4913,26 @@ namespace ClassicUO.Game.UI.Gumps
                         0, 0,
                         200
                     ));
-                startY += _namePlateOpacity.Height + 2;
-                section.PopIndent();
-            
+                startY += _namePlateOpacity.Height + 20;
+            section.PopIndent();
 
+            section.PushIndent();
+            section.Add(AddLabel(null, "Hidden Body Opacity", startX, startY));
             section.AddRight
            (
                _hiddenBodyAlpha = AddHSlider(
                    null,
-                   0,
-                   100,
+                    0, 100,
                    _currentProfile.HiddenBodyAlpha,
                    startX,
                    startY,
                    200
-               ),
-               2
+               )
            );
-            startY += _hiddenBodyAlpha.Height + 2;
-            section.Add(AddLabel(null, "Hidden Body Opacity", startX, startY));
+            startY += _hiddenBodyAlpha.Height + 10;
+            section.PopIndent();
+
+            section.AddRight(AddLabel(null, "Hidden Body Hue", startX, startY));
             section.Add
             (
                 _hiddenBodyHue = AddColorBox(
@@ -4942,11 +4943,12 @@ namespace ClassicUO.Game.UI.Gumps
                     ""
                     )
             );
-            section.AddRight(AddLabel(null, "Hidden Body Hue", startX, startY));
-            startY += _hiddenBodyAlpha.Height + 2;
+           
+            startY += _hiddenBodyAlpha.Height + 60;
+
 
             SettingsSection gridSection = new SettingsSection("Grid Containers", rightArea.Width);
-            gridSection.X = startX + 20;
+            gridSection.X = startX;
             gridSection.Y = startY + 20;
 
             
@@ -5153,7 +5155,7 @@ namespace ClassicUO.Game.UI.Gumps
         private void BuildMods()
         {
             const int PAGE = 18;
-            ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 420, true);
+            ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 550, true);
 
             int startX = 5;
             int startY = 5;
@@ -5972,7 +5974,7 @@ namespace ClassicUO.Game.UI.Gumps
                 190,
                 20,
                 WIDTH - 210,
-                420,
+                550,
                 true
             );
 
@@ -6255,7 +6257,7 @@ namespace ClassicUO.Game.UI.Gumps
                     _zoomCheckbox.IsChecked = false;
                     _restorezoomCheckbox.IsChecked = false;
                     _gameWindowWidth.SetText("600");
-                    _gameWindowHeight.SetText("480");
+                    _gameWindowHeight.SetText("540");
                     _gameWindowPositionX.SetText("20");
                     _gameWindowPositionY.SetText("20");
                     _gameWindowLock.IsChecked = false;
