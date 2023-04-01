@@ -32,6 +32,9 @@ namespace ClassicUO.Game.UI.Gumps
         private List<string> _tabName = new List<string>();
         private List<MessageType[]> _tabTypes = new List<MessageType[]>();
         private MessageType[] _currentFilter;
+
+        private bool _isMinimized;
+        private readonly GumpPic _gumpPic;
         #endregion
 
         private AlphaBlendControl _background;
@@ -124,6 +127,38 @@ namespace ClassicUO.Game.UI.Gumps
         }
 
         public override GumpType GumpType => GumpType.Journal;
+
+
+        public bool IsMinimized
+        {
+            get => _isMinimized;
+            set
+            {
+                if (_isMinimized != value)
+                {
+                    _isMinimized = value;
+
+                    _gumpPic.Graphic = value ? (ushort) 0x830 : (ushort) 0x82D;
+
+                    if (value)
+                    {
+                        _gumpPic.X = 0;
+                    }
+                    else
+                    {
+                        _gumpPic.X = 160;
+                    }
+
+                    foreach (Control c in Children)
+                    {
+                        c.IsVisible = !value;
+                    }
+
+                    _gumpPic.IsVisible = true;
+                    WantUpdateSize = true;
+                }
+            }
+        }
 
         protected override void OnMouseWheel(MouseEventType delta)
         {

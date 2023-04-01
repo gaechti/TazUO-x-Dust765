@@ -1944,7 +1944,7 @@ namespace ClassicUO.Game.Managers
                     break;
 
                 case MacroType.OpenJournal2:
-                    JournalGump2 journal2 = UIManager.GetGump<JournalGump2>();
+                    ResizableJournal journal2 = UIManager.GetGump<ResizableJournal>();
 
                     if (journal2 != null)
                     {
