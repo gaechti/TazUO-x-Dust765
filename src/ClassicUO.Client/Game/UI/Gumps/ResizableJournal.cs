@@ -45,7 +45,7 @@ namespace ClassicUO.Game.UI.Gumps
         private static int _lastX = 100, _lastY = 100;
         private static int _lastWidth = MIN_WIDTH, _lastHeight = 300;
         #endregion
-        public ResizableJournal(uint serial = 0, string title = null, ushort hue = 0) : base(_lastWidth, _lastHeight, MIN_WIDTH, MIN_HEIGHT, 0, 0)
+        public ResizableJournal() : base(_lastWidth, _lastHeight, MIN_WIDTH, MIN_HEIGHT, 0, 0)
         {
             AnchorType = ANCHOR_TYPE.NONE;
             CanMove = true;
