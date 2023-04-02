@@ -4891,8 +4891,9 @@ namespace ClassicUO.Game.UI.Gumps
                         null,
                         0, 100,
                         _currentProfile.NamePlateHealthBarOpacity,
-                        0, 0,
-                200
+                        startX,
+                    startY,
+                    200
                     ));
                 startY += _namePlateHealthBarOpacity.Height + 2;
                 section.Add(_namePlateShowAtFullHealth = AddCheckBox(null, "", _currentProfile.NamePlateHideAtFullHealth, 0, 0));
@@ -4906,11 +4907,12 @@ namespace ClassicUO.Game.UI.Gumps
 
             section.PushIndent();
             section.Add(AddLabel(null, "Name plate background opacity", 0, 0));
-                section.AddRight(_namePlateOpacity = AddHSlider(
+                section.Add(_namePlateOpacity = AddHSlider(
                         null,
                         0, 100,
                         _currentProfile.NamePlateOpacity,
-                        0, 0,
+                        startX,
+                    startY,
                         200
                     ));
                 startY += _namePlateOpacity.Height + 20;
@@ -4918,7 +4920,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             section.PushIndent();
             section.Add(AddLabel(null, "Hidden Body Opacity", startX, startY));
-            section.AddRight
+            section.Add
            (
                _hiddenBodyAlpha = AddHSlider(
                    null,
@@ -4932,8 +4934,8 @@ namespace ClassicUO.Game.UI.Gumps
             startY += _hiddenBodyAlpha.Height + 10;
             section.PopIndent();
 
-            section.AddRight(AddLabel(null, "Hidden Body Hue", startX, startY));
-            section.Add
+            section.Add(AddLabel(null, "Hidden Body Hue", startX, startY));
+            section.AddRight
             (
                 _hiddenBodyHue = AddColorBox(
                     null,
@@ -4949,7 +4951,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             SettingsSection gridSection = new SettingsSection("Grid Containers", rightArea.Width);
             gridSection.X = startX;
-            gridSection.Y = startY + 20;
+            gridSection.Y = startY + 40;
 
             
                 gridSection.Add(_useGridLayoutContainerGumps = AddCheckBox(
@@ -4965,7 +4967,7 @@ namespace ClassicUO.Game.UI.Gumps
             
                 gridSection.Add(AddLabel(null, "Grid container scale", 0, 0));
 
-                gridSection.AddRight(_gridContainerScale = AddHSlider(
+                gridSection.Add(_gridContainerScale = AddHSlider(
                         null,
                         50, 200,
                         _currentProfile.GridContainersScale,
@@ -5115,7 +5117,7 @@ namespace ClassicUO.Game.UI.Gumps
                 gridSection.AddRight(_gridDefaultColumns = AddInputField(null, 0, 0, 25, TEXTBOX_HEIGHT, numbersOnly: true));
                 startY += _gridDefaultColumns.Height + 2;
                 _gridDefaultColumns.SetText(_currentProfile.Grid_DefaultColumns.ToString());
-                startY += _gridDefaultColumns.Height + 2;
+                startY += _gridDefaultColumns.Height + 40;
             
 
 
